@@ -1,0 +1,3279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movie Max — Free Movies App | Watch Free Movies Online</title>
+<meta name="description" content="Movie Max — Stream and download free movies online. Watch the latest Hollywood, Nollywood, Anime, Action, Sci-Fi, Romance, Series and more. Free movies app by Trident Technologies.">
+<meta name="keywords" content="free movies app, watch free movies online, movie max, stream movies, download movies, free streaming, Hollywood movies, Nollywood, anime, series, movie max free movies app">
+<meta name="author" content="Trident Technologies">
+<meta property="og:title" content="Movie Max — Free Movies App">
+<meta property="og:description" content="Stream and download thousands of free movies. Hollywood, Nollywood, Anime, Series and more. No subscription needed.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#FF2E63">
+<link rel="canonical" href="https://moviemax.app">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+  :root {
+    --black: #0D0D0D;
+    --dark: #1A1A1A;
+    --darker: #111111;
+    --red: #FF2E63;
+    --red-dim: rgba(255,46,99,0.15);
+    --red-glow: rgba(255,46,99,0.5);
+    --blue: #08D9D6;
+    --blue-dim: rgba(8,217,214,0.12);
+    --blue-glow: rgba(8,217,214,0.45);
+    --white: #FFFFFF;
+    --grey: #888;
+    --card-bg: rgba(255,255,255,0.04);
+    --glass: rgba(13,13,13,0.75);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Exo 2', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: var(--dark); }
+  ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
+
+  /* ─── SCREENS ─── */
+  .screen { display: none; animation: fadeIn 0.4s ease; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes zoomIn { from { opacity:0; transform:scale(0.96); } to { opacity:1; transform:scale(1); } }
+  @keyframes glowPulse {
+    0%,100% { box-shadow: 0 0 16px var(--red-glow), 0 0 32px var(--red-glow); }
+    50% { box-shadow: 0 0 28px var(--red-glow), 0 0 56px var(--red-glow), 0 0 80px rgba(255,46,99,0.2); }
+  }
+  @keyframes bluePulse {
+    0%,100% { box-shadow: 0 0 16px var(--blue-glow), 0 0 32px var(--blue-glow); }
+    50% { box-shadow: 0 0 28px var(--blue-glow), 0 0 56px var(--blue-glow), 0 0 80px rgba(8,217,214,0.2); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes scanline {
+    0% { top: -10%; }
+    100% { top: 110%; }
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes particleDrift {
+    0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-20vh) translateX(60px); opacity: 0; }
+  }
+  @keyframes logoReveal {
+    0% { opacity:0; transform: scale(0.5) translateY(-30px); filter: blur(20px); }
+    60% { opacity:1; transform: scale(1.08) translateY(0); filter: blur(0); }
+    100% { opacity:1; transform: scale(1) translateY(0); }
+  }
+  @keyframes slideUp {
+    from { opacity:0; transform:translateY(40px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  @keyframes inputGlow {
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,46,99,0); }
+    50% { box-shadow: 0 0 20px rgba(255,46,99,0.3), 0 0 40px rgba(255,46,99,0.1); }
+  }
+  @keyframes tickerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes countdownPulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+  }
+
+  /* ─── TOP NAV ─── */
+  .topnav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px;
+    background: linear-gradient(to bottom, rgba(13,13,13,0.97) 0%, transparent 100%);
+    backdrop-filter: blur(8px);
+  }
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 3px;
+    background: linear-gradient(135deg, var(--red) 0%, #FF6B9D 50%, var(--blue) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 12px var(--red-glow));
+    cursor: pointer;
+  }
+  .logo span { color: var(--blue); -webkit-text-fill-color: var(--blue); filter: none; }
+  .topnav-right { display: flex; align-items: center; gap: 16px; }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--red), var(--blue));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; cursor: pointer;
+    box-shadow: 0 0 12px var(--red-glow);
+    overflow: hidden;
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .topnav-tag {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px; letter-spacing: 2px; color: var(--blue);
+    opacity: 0.7; text-transform: uppercase;
+  }
+
+  /* ─── HERO BANNER ─── */
+  .hero {
+    position: relative; height: 88vh; min-height: 500px;
+    display: flex; align-items: flex-end; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #0D0D0D 0%, #1a0510 30%, #050d1a 70%, #0D0D0D 100%);
+    overflow: hidden;
+  }
+  .hero-poster {
+    position: absolute; inset: 0;
+    background-image: url('https://m.media-amazon.com/images/M/MV5BMDBmYTZjNjUtN2M1MS00MTQ2LTk2ODgtNzc2M2QyZGE5NTVjXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_.jpg');
+    background-size: cover; background-position: center top;
+    opacity: 0.35; filter: blur(1px) saturate(1.4);
+    transform: scale(1.05); transition: transform 8s ease;
+  }
+  .hero:hover .hero-poster { transform: scale(1.08); }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top,
+      rgba(13,13,13,1) 0%, rgba(13,13,13,0.8) 25%,
+      rgba(13,13,13,0.3) 60%, rgba(13,13,13,0.1) 100%);
+  }
+  .hero-overlay-sides {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, rgba(13,13,13,0.9) 0%, transparent 40%, transparent 60%, rgba(13,13,13,0.6) 100%);
+  }
+  .hero-scan {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, transparent, rgba(8,217,214,0.3), transparent);
+    animation: scanline 6s linear infinite; pointer-events: none;
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 40px 40px 60px; max-width: 620px;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--red-dim); border: 1px solid var(--red);
+    color: var(--red); padding: 4px 12px; border-radius: 4px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 3px;
+    margin-bottom: 16px; box-shadow: 0 0 12px var(--red-dim);
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 88px);
+    line-height: 0.95; letter-spacing: 2px;
+    text-shadow: 0 0 40px rgba(255,46,99,0.4), 0 4px 20px rgba(0,0,0,0.8);
+    margin-bottom: 16px;
+  }
+  .hero-title em { color: var(--blue); font-style: normal; }
+  .hero-meta {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 20px;
+    font-family: 'Rajdhani', sans-serif; font-size: 14px; color: var(--grey);
+  }
+  .hero-meta .rating { color: #FFD700; font-weight: 700; }
+  .hero-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--grey); }
+  .hero-desc {
+    font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.7);
+    margin-bottom: 28px; font-weight: 300; max-width: 480px;
+  }
+  .hero-buttons { display: flex; gap: 12px; align-items: center; }
+  .hero-top-10 {
+    position: absolute; right: 24px; bottom: 60px; z-index: 3;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .top10-badge {
+    font-family: 'Bebas Neue'; font-size: 56px; line-height: 1;
+    color: transparent; -webkit-text-stroke: 2px var(--red);
+    filter: drop-shadow(0 0 12px var(--red-glow));
+  }
+  .top10-text { font-family: 'Rajdhani'; font-size: 11px; letter-spacing: 2px; color: var(--grey); }
+
+  /* ─── BUTTONS ─── */
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--red) 0%, #c5003f 100%);
+    color: var(--white); border: none; border-radius: 8px;
+    padding: 14px 28px; font-family: 'Rajdhani', sans-serif;
+    font-size: 16px; font-weight: 700; letter-spacing: 2px;
+    cursor: pointer; text-transform: uppercase;
+    box-shadow: 0 0 20px var(--red-glow), 0 4px 20px rgba(0,0,0,0.5);
+    animation: glowPulse 2.5s ease infinite;
+    transition: transform 0.2s, filter 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .btn-primary::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    background-size: 200% 100%; animation: shimmer 2s linear infinite;
+  }
+  .btn-primary:hover { transform: translateY(-2px) scale(1.03); filter: brightness(1.15); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(8,217,214,0.4);
+    color: var(--white); border-radius: 8px;
+    padding: 14px 24px; font-family: 'Rajdhani', sans-serif;
+    font-size: 15px; font-weight: 600; letter-spacing: 1px;
+    cursor: pointer; text-transform: uppercase;
+    backdrop-filter: blur(8px); box-shadow: 0 0 12px var(--blue-dim);
+    transition: all 0.25s;
+  }
+  .btn-secondary:hover {
+    background: rgba(8,217,214,0.12); box-shadow: 0 0 20px var(--blue-glow);
+    border-color: var(--blue); transform: translateY(-2px);
+  }
+
+  /* ─── TICKER ─── */
+  .ticker-wrap {
+    overflow: hidden; background: rgba(255,46,99,0.06);
+    border-top: 1px solid rgba(255,46,99,0.15);
+    border-bottom: 1px solid rgba(255,46,99,0.15);
+    padding: 8px 0; margin-bottom: 4px;
+  }
+  .ticker {
+    display: flex; gap: 0; white-space: nowrap;
+    animation: tickerScroll 28s linear infinite;
+  }
+  .ticker-item {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 0 32px;
+    font-family: 'Rajdhani'; font-size: 13px; font-weight: 600;
+    color: var(--grey); letter-spacing: 1px;
+  }
+  .ticker-item .dot { color: var(--red); }
+  .ticker-item strong { color: var(--white); }
+
+  /* ─── SECTIONS ─── */
+  .section { padding: 8px 24px 24px; }
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 20px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--white);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::before {
+    content: ''; width: 4px; height: 20px; border-radius: 2px;
+    background: linear-gradient(to bottom, var(--red), var(--blue));
+    box-shadow: 0 0 8px var(--red-glow);
+  }
+  .see-all {
+    font-family: 'Rajdhani', sans-serif; font-size: 13px;
+    color: var(--blue); letter-spacing: 1px; cursor: pointer;
+    text-transform: uppercase; border: none; background: none;
+    transition: all 0.2s;
+  }
+  .see-all:hover { text-shadow: 0 0 8px var(--blue-glow); }
+
+  /* ─── MOVIE CARDS ROW ─── */
+  .cards-row {
+    display: flex; gap: 14px; overflow-x: auto;
+    padding-bottom: 12px; scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .cards-row::-webkit-scrollbar { display: none; }
+
+  .movie-card {
+    flex: 0 0 160px; border-radius: 12px;
+    overflow: hidden; position: relative;
+    cursor: pointer; scroll-snap-align: start;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+    background: var(--dark);
+    animation: zoomIn 0.4s ease backwards;
+  }
+  .movie-card:hover {
+    transform: translateY(-8px) scale(1.04);
+    box-shadow: 0 12px 40px rgba(255,46,99,0.35), 0 0 0 1px rgba(255,46,99,0.4);
+    z-index: 10;
+  }
+  .movie-card-img {
+    width: 100%; aspect-ratio: 2/3; object-fit: cover;
+    display: block; transition: filter 0.3s;
+  }
+  .movie-card:hover .movie-card-img { filter: brightness(1.1) saturate(1.2); }
+  .movie-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(13,13,13,0.95) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+    display: flex; flex-direction: column;
+    justify-content: flex-end; padding: 12px;
+  }
+  .movie-card:hover .movie-card-overlay { opacity: 1; }
+  .card-play {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--red); display: flex; align-items: center; justify-content: center;
+    margin-bottom: 8px; box-shadow: 0 0 16px var(--red-glow);
+  }
+  .card-play i { font-size: 14px; margin-left: 2px; }
+  .card-title-hover {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.5px; line-height: 1.3;
+  }
+  .rating-badge {
+    position: absolute; top: 8px; right: 8px;
+    background: rgba(13,13,13,0.85); backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 6px; padding: 2px 7px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px; font-weight: 700; color: #FFD700;
+    display: flex; align-items: center; gap: 3px;
+  }
+  .rating-badge i { font-size: 9px; }
+  .card-info { padding: 10px 10px 12px; background: var(--dark); }
+  .card-name {
+    font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .card-year { font-size: 11px; color: var(--grey); margin-top: 2px; }
+
+  /* Top 10 number cards */
+  .top10-card {
+    flex: 0 0 130px; position: relative; cursor: pointer;
+    transition: transform 0.3s; scroll-snap-align: start;
+  }
+  .top10-card:hover { transform: translateY(-6px); z-index: 10; }
+  .top10-card img {
+    width: 100%; aspect-ratio: 2/3; object-fit: cover;
+    border-radius: 8px 8px 0 0;
+  }
+  .top10-num {
+    position: absolute; left: -10px; bottom: 28px;
+    font-family: 'Bebas Neue'; font-size: 80px; line-height: 1;
+    color: transparent; -webkit-text-stroke: 2px rgba(255,255,255,0.9);
+    text-shadow: 0 0 24px rgba(0,0,0,0.8);
+    filter: drop-shadow(2px 2px 8px rgba(0,0,0,0.9));
+  }
+  .top10-card-info { background: var(--dark); padding: 6px 8px 10px; border-radius: 0 0 8px 8px; }
+  .top10-card-name { font-family: 'Rajdhani'; font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ─── FEATURED WIDE CARD ─── */
+  .wide-card {
+    flex: 0 0 280px; border-radius: 12px; overflow: hidden;
+    position: relative; cursor: pointer; background: var(--dark);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .wide-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px var(--blue-dim), 0 0 0 1px rgba(8,217,214,0.3);
+  }
+  .wide-card-img { width: 100%; height: 160px; object-fit: cover; }
+  .wide-card-content { padding: 14px; }
+  .wide-card-title { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; }
+  .wide-card-sub { font-size: 12px; color: var(--grey); margin-top: 4px; }
+  .wide-card-badge {
+    display: inline-block; padding: 3px 8px; border-radius: 4px;
+    font-size: 11px; font-family: 'Rajdhani'; font-weight: 700; letter-spacing: 1px; margin-top: 8px;
+  }
+  .badge-red { background: var(--red-dim); color: var(--red); border: 1px solid rgba(255,46,99,0.3); }
+  .badge-blue { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(8,217,214,0.3); }
+
+  /* ─── UPCOMING CALENDAR CARD ─── */
+  .upcoming-card {
+    flex: 0 0 160px; border-radius: 12px; overflow: hidden;
+    cursor: pointer; background: var(--dark);
+    transition: transform 0.3s, box-shadow 0.3s;
+    scroll-snap-align: start; position: relative;
+  }
+  .upcoming-card:hover { transform: translateY(-6px); box-shadow: 0 12px 32px rgba(8,217,214,0.2); }
+  .upcoming-card-img { width: 100%; height: 100px; object-fit: cover; display: block; }
+  .upcoming-date-badge {
+    position: absolute; top: 8px; left: 8px;
+    background: rgba(13,13,13,0.9); backdrop-filter: blur(4px);
+    border: 1px solid rgba(8,217,214,0.4); border-radius: 6px;
+    padding: 3px 8px; font-family: 'Rajdhani'; font-size: 11px;
+    color: var(--blue); font-weight: 700; letter-spacing: 1px;
+  }
+  .upcoming-booked {
+    position: absolute; top: 8px; right: 8px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--red); box-shadow: 0 0 6px var(--red-glow);
+    animation: countdownPulse 1.5s ease infinite;
+  }
+  .upcoming-card-info { padding: 10px; }
+  .upcoming-card-title { font-family: 'Rajdhani'; font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .upcoming-card-sub { font-size: 10px; color: var(--grey); }
+  .upcoming-card-booked { font-size: 10px; color: var(--red); margin-top: 3px; font-family: 'Rajdhani'; }
+
+  /* ─── BOTTOM NAV ─── */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center;
+    background: rgba(13,13,13,0.95); backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.06); padding: 10px 0 14px;
+  }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    cursor: pointer; padding: 6px; transition: all 0.2s; position: relative;
+  }
+  .nav-item i { font-size: 20px; color: var(--grey); transition: all 0.25s; }
+  .nav-item span {
+    font-family: 'Rajdhani', sans-serif; font-size: 10px; letter-spacing: 1px;
+    color: var(--grey); text-transform: uppercase; transition: all 0.25s;
+  }
+  .nav-item.active i { color: var(--red); filter: drop-shadow(0 0 6px var(--red)); }
+  .nav-item.active span { color: var(--red); }
+  .nav-item.active::before {
+    content: ''; position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+    width: 40px; height: 2px; background: var(--red);
+    box-shadow: 0 0 10px var(--red-glow); border-radius: 0 0 4px 4px;
+  }
+  .nav-item:hover i { color: var(--white); }
+
+  /* ─── SEARCH SCREEN ─── */
+  .search-screen-content { padding: 100px 24px 24px; }
+  .search-bar-wrap { position: relative; margin-bottom: 28px; }
+  .search-bar-wrap i {
+    position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+    color: var(--blue); font-size: 16px; filter: drop-shadow(0 0 6px var(--blue-glow));
+  }
+  .search-input {
+    width: 100%; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(8,217,214,0.35); border-radius: 12px;
+    padding: 16px 20px 16px 50px; color: var(--white);
+    font-family: 'Exo 2', sans-serif; font-size: 16px; outline: none; transition: all 0.3s;
+  }
+  .search-input::placeholder { color: rgba(255,255,255,0.3); }
+  .search-input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 20px var(--blue-dim), 0 0 40px rgba(8,217,214,0.1);
+    background: rgba(8,217,214,0.04);
+  }
+  .search-categories {
+    display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto;
+    padding-bottom: 4px; scrollbar-width: none;
+  }
+  .search-categories::-webkit-scrollbar { display: none; }
+  .cat-tag {
+    flex: 0 0 auto; padding: 7px 16px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
+    font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--grey); cursor: pointer; letter-spacing: 1px; transition: all 0.2s; white-space: nowrap;
+  }
+  .cat-tag.active, .cat-tag:hover {
+    background: var(--red-dim); border-color: var(--red);
+    color: var(--red); box-shadow: 0 0 10px var(--red-dim);
+  }
+  .search-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .search-card {
+    border-radius: 10px; overflow: hidden; position: relative;
+    cursor: pointer; background: var(--dark);
+    transition: transform 0.25s, box-shadow 0.25s;
+    animation: zoomIn 0.3s ease backwards;
+  }
+  .search-card:hover { transform: scale(1.04); box-shadow: 0 8px 24px rgba(255,46,99,0.3); }
+  .search-card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
+  .search-card-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(13,13,13,0.95), transparent);
+    padding: 20px 8px 8px;
+  }
+  .search-card-name { font-family: 'Rajdhani'; font-size: 12px; font-weight: 700; }
+  .search-rating { font-size: 11px; color: #FFD700; margin-top: 2px; }
+  .search-empty {
+    text-align: center; padding: 60px 20px; color: var(--grey);
+    display: none;
+  }
+  .search-empty i { font-size: 40px; opacity: 0.2; display: block; margin-bottom: 16px; }
+  .search-empty p { font-family: 'Rajdhani'; font-size: 16px; letter-spacing: 1px; }
+
+  /* ─── DETAIL SCREEN ─── */
+  .detail-hero { position: relative; height: 55vw; max-height: 340px; overflow: hidden; }
+  .detail-bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    filter: blur(2px) saturate(1.3); transform: scale(1.08);
+  }
+  .detail-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(13,13,13,1) 0%, rgba(13,13,13,0.4) 60%, rgba(13,13,13,0.2) 100%);
+  }
+  .detail-back {
+    position: absolute; top: 60px; left: 20px; z-index: 5;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(13,13,13,0.7); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .detail-back:hover { background: var(--red-dim); border-color: var(--red); }
+  .detail-poster-wrap {
+    position: absolute; bottom: -40px; left: 24px; z-index: 5;
+  }
+  .detail-poster-wrap img {
+    width: 100px; border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.1);
+  }
+  .detail-content { padding: 52px 24px 16px 140px; }
+  .detail-title {
+    font-family: 'Bebas Neue'; font-size: 30px; letter-spacing: 2px; margin-bottom: 10px;
+  }
+  .detail-meta2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .detail-rating-big {
+    display: flex; align-items: center; gap: 4px;
+    color: #FFD700; font-family: 'Rajdhani'; font-weight: 700; font-size: 15px;
+  }
+  .detail-tag {
+    background: var(--red-dim); border: 1px solid rgba(255,46,99,0.3);
+    color: var(--red); padding: 2px 10px; border-radius: 4px;
+    font-family: 'Rajdhani'; font-size: 12px; font-weight: 700; letter-spacing: 1px;
+  }
+  .detail-info-strip { font-family: 'Rajdhani'; font-size: 13px; color: var(--grey); }
+  .detail-desc-section { padding: 0 24px 24px; }
+  .detail-desc { font-size: 14px; line-height: 1.75; color: rgba(255,255,255,0.7); font-weight: 300; margin-bottom: 24px; }
+  .detail-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .detail-credits { padding: 20px 24px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .credits-title { font-family: 'Rajdhani'; font-size: 13px; letter-spacing: 2px; color: var(--grey); text-transform: uppercase; margin-bottom: 12px; }
+  .cast-row { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; }
+  .cast-item { flex: 0 0 70px; text-align: center; }
+  .cast-avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,46,99,0.2), rgba(8,217,214,0.2));
+    border: 2px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue'; font-size: 20px; color: rgba(255,255,255,0.5);
+    margin: 0 auto 6px;
+  }
+  .cast-name { font-size: 10px; color: var(--grey); font-family: 'Rajdhani'; }
+
+  /* ─── DOWNLOADS SCREEN ─── */
+  .downloads-content { padding: 96px 24px 24px; }
+  .downloads-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .page-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 3px;
+    background: linear-gradient(135deg, var(--white), rgba(255,255,255,0.6));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .storage-badge {
+    background: var(--blue-dim); border: 1px solid rgba(8,217,214,0.3);
+    color: var(--blue); padding: 6px 14px; border-radius: 20px;
+    font-family: 'Rajdhani'; font-size: 13px; font-weight: 600;
+  }
+  .dl-tabs { display: flex; gap: 0; margin-bottom: 20px; border-radius: 10px; overflow: hidden; background: rgba(255,255,255,0.04); }
+  .dl-tab {
+    flex: 1; padding: 10px; text-align: center;
+    font-family: 'Rajdhani'; font-size: 13px; font-weight: 600; letter-spacing: 1px;
+    color: var(--grey); cursor: pointer; transition: all 0.25s;
+  }
+  .dl-tab.active { background: var(--red-dim); color: var(--red); }
+  .storage-bar-wrap { margin-bottom: 28px; }
+  .storage-label { display: flex; justify-content: space-between; font-family: 'Rajdhani'; font-size: 13px; color: var(--grey); margin-bottom: 8px; }
+  .storage-bar { height: 4px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+  .storage-fill { height: 100%; background: linear-gradient(to right, var(--red), var(--blue)); border-radius: 4px; width: 35%; box-shadow: 0 0 8px var(--blue-glow); }
+  .dl-list { display: flex; flex-direction: column; gap: 14px; }
+  .dl-item {
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px; padding: 14px; transition: all 0.25s; cursor: pointer;
+  }
+  .dl-item:hover { background: rgba(255,46,99,0.05); border-color: rgba(255,46,99,0.2); }
+  .dl-thumb { width: 64px; height: 90px; border-radius: 8px; object-fit: cover; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+  .dl-info { flex: 1; min-width: 0; }
+  .dl-title { font-family: 'Rajdhani'; font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .dl-meta { font-size: 12px; color: var(--grey); margin-bottom: 8px; }
+  .dl-progress { height: 3px; background: rgba(255,255,255,0.08); border-radius: 4px; }
+  .dl-progress-fill { height: 100%; border-radius: 4px; }
+  .dl-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .dl-size { font-family: 'Rajdhani'; font-size: 13px; color: var(--grey); }
+  .dl-play { width: 36px; height: 36px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 12px var(--red-glow); flex-shrink: 0; }
+  .find-sources-btn {
+    width: 100%; padding: 14px; border-radius: 10px; margin-top: 16px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    color: var(--blue); font-family: 'Rajdhani'; font-size: 14px; font-weight: 700;
+    letter-spacing: 2px; cursor: pointer; text-align: center; transition: all 0.25s;
+  }
+  .find-sources-btn:hover { background: var(--blue-dim); border-color: var(--blue); }
+
+  /* ─── PROFILE SCREEN ─── */
+  .profile-content { padding: 80px 24px 24px; }
+  .profile-banner {
+    position: relative; margin: 0 -24px 0; height: 120px; overflow: hidden;
+    background: linear-gradient(135deg, #1a0510, #050d1a);
+  }
+  .profile-banner-gfx {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,46,99,0.25) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(8,217,214,0.15) 0%, transparent 60%);
+  }
+  .profile-hero { text-align: center; padding: 0 20px 32px; margin-top: -50px; position: relative; z-index: 2; }
+  .profile-avatar-big {
+    width: 100px; height: 100px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--red), var(--blue));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue'; font-size: 42px; color: var(--white);
+    margin: 0 auto 16px; border: 3px solid var(--black);
+    box-shadow: 0 0 30px var(--red-glow), 0 0 60px rgba(255,46,99,0.2);
+    position: relative; overflow: hidden;
+  }
+  .profile-avatar-big img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .profile-avatar-big::after {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    border: 2px solid transparent;
+    background: linear-gradient(135deg, var(--red), var(--blue)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out; mask-composite: exclude;
+    animation: glowPulse 3s ease infinite;
+  }
+  .profile-name { font-family: 'Bebas Neue'; font-size: 28px; letter-spacing: 2px; margin-bottom: 4px; }
+  .profile-id { font-size: 12px; color: var(--grey); font-family: 'Rajdhani'; margin-bottom: 4px; }
+  .profile-sub { font-size: 13px; color: var(--grey); font-family: 'Rajdhani'; }
+  .profile-plan {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--red-dim); border: 1px solid rgba(255,46,99,0.4);
+    padding: 5px 16px; border-radius: 20px;
+    font-family: 'Rajdhani'; font-size: 13px; font-weight: 700; color: var(--red);
+    margin-top: 12px; letter-spacing: 1px; cursor: pointer; transition: all 0.25s;
+  }
+  .profile-plan:hover { background: var(--red); color: var(--white); }
+  .profile-premium-banner {
+    background: linear-gradient(135deg, rgba(255,46,99,0.1), rgba(8,217,214,0.08));
+    border: 1px solid rgba(255,46,99,0.2); border-radius: 14px;
+    padding: 16px 20px; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .premium-icon { font-size: 28px; filter: drop-shadow(0 0 8px var(--red-glow)); }
+  .premium-text { flex: 1; }
+  .premium-text strong { font-family: 'Rajdhani'; font-size: 16px; font-weight: 700; display: block; margin-bottom: 2px; }
+  .premium-text span { font-size: 12px; color: var(--grey); }
+  .premium-arrow { color: var(--blue); }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
+  .stat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; text-align: center; }
+  .stat-num {
+    font-family: 'Bebas Neue'; font-size: 32px; letter-spacing: 1px;
+    background: linear-gradient(135deg, var(--red), var(--blue));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .stat-label { font-family: 'Rajdhani'; font-size: 11px; color: var(--grey); letter-spacing: 1px; }
+  .watch-history-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 20px; scrollbar-width: none; }
+  .watch-history-row::-webkit-scrollbar { display: none; }
+  .history-thumb { flex: 0 0 80px; position: relative; cursor: pointer; }
+  .history-thumb img { width: 80px; height: 56px; object-fit: cover; border-radius: 8px; border: 2px solid transparent; transition: border-color 0.2s; }
+  .history-thumb:hover img { border-color: var(--red); }
+  .history-thumb-name { font-family: 'Rajdhani'; font-size: 10px; color: var(--grey); text-align: center; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .history-bar { position: absolute; bottom: 18px; left: 2px; right: 2px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+  .history-bar-fill { height: 100%; background: var(--red); border-radius: 2px; }
+  .profile-menu { display: flex; flex-direction: column; gap: 2px; }
+  .menu-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 18px; border-radius: 10px; cursor: pointer; transition: all 0.2s; position: relative;
+  }
+  .menu-item:hover { background: rgba(255,255,255,0.04); }
+  .menu-item .mi-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .mi-red { background: var(--red-dim); color: var(--red); }
+  .mi-blue { background: var(--blue-dim); color: var(--blue); }
+  .mi-grey { background: rgba(255,255,255,0.05); color: var(--grey); }
+  .menu-item .mi-label { flex: 1; font-family: 'Rajdhani'; font-size: 15px; font-weight: 600; }
+  .menu-item .mi-sub { font-size: 11px; color: var(--grey); }
+  .menu-item .mi-badge { background: var(--blue); color: var(--black); font-family: 'Rajdhani'; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
+  .menu-item i.fa-chevron-right { color: var(--grey); font-size: 12px; }
+  .branding-footer {
+    text-align: center; padding: 28px 16px 12px;
+    font-family: 'Rajdhani'; font-size: 12px; color: rgba(255,255,255,0.2);
+    letter-spacing: 2px; text-transform: uppercase;
+    border-top: 1px solid rgba(255,255,255,0.05); margin-top: 24px;
+  }
+  .branding-footer span { color: var(--blue); }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; top: 80px; right: 20px; z-index: 999;
+    background: rgba(13,13,13,0.95); backdrop-filter: blur(16px);
+    border: 1px solid rgba(8,217,214,0.4); border-radius: 10px; padding: 12px 20px;
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Rajdhani'; font-size: 14px; font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6), 0 0 20px var(--blue-dim);
+    opacity: 0; transform: translateX(40px);
+    transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(0); }
+  .toast i { color: var(--blue); }
+
+  /* ─── LIGHT THEME ─── */
+  body.light-mode {
+    --black: #D8D8E0;
+    --dark: #E2E2EA;
+    --darker: #C8C8D4;
+    --white: #0D0D0D;
+    --grey: #444;
+    --card-bg: rgba(0,0,0,0.06);
+    --glass: rgba(210,210,220,0.92);
+  }
+  body.light-mode { background: var(--black); color: var(--white); }
+  body.light-mode .topnav { background: linear-gradient(to bottom, rgba(210,210,220,0.97) 0%, transparent 100%); }
+  body.light-mode .bottom-nav { background: rgba(210,210,220,0.97); border-top: 1px solid rgba(0,0,0,0.15); }
+  body.light-mode .movie-card { background: #E2E2EA; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
+  body.light-mode .card-info { background: #E2E2EA; }
+  body.light-mode .card-name { color: #111; }
+  body.light-mode .card-year { color: #666; }
+  body.light-mode .section-title { color: #111; }
+  body.light-mode .toast { background: rgba(220,220,230,0.97); color: #111; }
+  body.light-mode .search-input { background: rgba(0,0,0,0.08); color: #111; border-color: rgba(8,217,214,0.5); }
+  body.light-mode .search-input::placeholder { color: rgba(0,0,0,0.4); }
+  body.light-mode .wide-card { background: #E2E2EA; }
+  body.light-mode .upcoming-card { background: #E2E2EA; }
+  body.light-mode .dl-item { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); }
+  body.light-mode .profile-content { background: var(--black); }
+  body.light-mode .stat-card { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.1); }
+  body.light-mode .menu-item:hover { background: rgba(0,0,0,0.06); }
+  body.light-mode body::before { background-image: linear-gradient(rgba(255,46,99,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,46,99,0.06) 1px, transparent 1px); }
+  body.light-mode .top10-card-info { background: #E2E2EA; }
+  body.light-mode .ticker-wrap { background: rgba(255,46,99,0.06); }
+  body.light-mode .settings-panel, body.light-mode .accsettings-panel { background: #D8D8E0; }
+  body.light-mode .settings-item { border-bottom-color: rgba(0,0,0,0.09); }
+  body.light-mode .settings-item-label { color: #111; }
+  body.light-mode .settings-item-sub { color: #666; }
+  body.light-mode .genre-pill { background: rgba(0,0,0,0.08); border-color: rgba(0,0,0,0.15); color: #444; }
+  body.light-mode .hero-bg { background: linear-gradient(135deg, #C0C0CC 0%, #B8B0C0 30%, #B0B8C8 70%, #C0C0CC 100%); }
+  body.light-mode .trending-tag.t-red { background: rgba(255,46,99,0.18); }
+  body.light-mode .trending-tag.t-blue { background: rgba(8,217,214,0.15); }
+  body.light-mode .trending-tag.t-gold { background: rgba(255,215,0,0.15); }
+  body.light-mode .trending-tag.t-purple { background: rgba(155,89,182,0.15); }
+  body.light-mode .search-card { background: #E2E2EA; }
+  body.light-mode .player-bar { background: rgba(210,210,220,0.98); }
+  body.light-mode .community-post { background: #E2E2EA; border-color: rgba(0,0,0,0.1); }
+  body.light-mode .msg-bubble.mine { background: rgba(255,46,99,0.2); }
+  body.light-mode .msg-bubble.theirs { background: rgba(0,0,0,0.1); color: #111; }
+
+  /* ─── FLOATING TRENDING TAGS ─── */
+  @keyframes floatTag1 {
+    0%   { transform: translateY(0px) translateX(0px); }
+    25%  { transform: translateY(-14px) translateX(6px); }
+    50%  { transform: translateY(-8px) translateX(12px); }
+    75%  { transform: translateY(-18px) translateX(4px); }
+    100% { transform: translateY(0px) translateX(0px); }
+  }
+  @keyframes floatTag2 {
+    0%   { transform: translateY(0px) translateX(0px); }
+    33%  { transform: translateY(-20px) translateX(-8px); }
+    66%  { transform: translateY(-10px) translateX(-4px); }
+    100% { transform: translateY(0px) translateX(0px); }
+  }
+  @keyframes floatTag3 {
+    0%   { transform: translateY(0px) translateX(0px); }
+    20%  { transform: translateY(-10px) translateX(10px); }
+    60%  { transform: translateY(-22px) translateX(5px); }
+    100% { transform: translateY(0px) translateX(0px); }
+  }
+  .trending-float-wrap {
+    position: relative; padding: 10px 24px 28px; overflow: hidden;
+    min-height: 110px; display: flex; align-items: flex-end; flex-wrap: wrap; gap: 10px;
+  }
+  .trending-tag {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 16px; border-radius: 8px;
+    font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700;
+    letter-spacing: 1px; cursor: pointer; white-space: nowrap;
+    backdrop-filter: blur(8px);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .trending-tag:hover { transform: translateY(-4px) scale(1.06) !important; }
+  .trending-tag.t-red {
+    background: rgba(255,46,99,0.12); border: 1px solid rgba(255,46,99,0.45);
+    color: var(--red); box-shadow: 0 4px 16px rgba(255,46,99,0.2);
+    animation: floatTag1 5s ease-in-out infinite;
+  }
+  .trending-tag.t-blue {
+    background: rgba(8,217,214,0.1); border: 1px solid rgba(8,217,214,0.4);
+    color: var(--blue); box-shadow: 0 4px 16px rgba(8,217,214,0.15);
+    animation: floatTag2 6.5s ease-in-out infinite;
+  }
+  .trending-tag.t-gold {
+    background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.4);
+    color: #FFD700; box-shadow: 0 4px 16px rgba(255,215,0,0.1);
+    animation: floatTag3 4.8s ease-in-out infinite;
+  }
+  .trending-tag.t-purple {
+    background: rgba(155,89,182,0.1); border: 1px solid rgba(155,89,182,0.4);
+    color: #b388f5; box-shadow: 0 4px 16px rgba(155,89,182,0.15);
+    animation: floatTag1 7s ease-in-out infinite reverse;
+  }
+  .trending-tag i { font-size: 13px; }
+
+  /* ─── SETTINGS PANEL ─── */
+  .settings-overlay {
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .settings-overlay.open { opacity: 1; pointer-events: all; }
+  .settings-panel {
+    position: fixed; right: -100%; top: 0; bottom: 0; z-index: 501;
+    width: min(360px, 92vw);
+    background: #141414; overflow-y: auto;
+    transition: right 0.38s cubic-bezier(0.34,1.2,0.64,1);
+    border-left: 1px solid rgba(255,255,255,0.07);
+    display: flex; flex-direction: column;
+  }
+  .settings-panel.open { right: 0; }
+  .accsettings-panel {
+    position: fixed; left: -100%; top: 0; bottom: 0; z-index: 501;
+    width: min(360px, 92vw);
+    background: #141414; overflow-y: auto;
+    transition: left 0.38s cubic-bezier(0.34,1.2,0.64,1);
+    border-right: 1px solid rgba(255,255,255,0.07);
+    display: flex; flex-direction: column;
+  }
+  .accsettings-panel.open { left: 0; }
+  .settings-head {
+    padding: 56px 24px 20px; display: flex; align-items: center; gap: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    background: linear-gradient(to bottom, rgba(255,46,99,0.06), transparent);
+  }
+  .settings-head-icon {
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+    background: var(--red-dim); border: 1px solid rgba(255,46,99,0.3);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--red); font-size: 18px;
+  }
+  .settings-head-title { font-family: 'Bebas Neue'; font-size: 24px; letter-spacing: 2px; }
+  .settings-head-sub { font-family: 'Rajdhani'; font-size: 11px; color: var(--grey); letter-spacing: 1px; }
+  .settings-close {
+    margin-left: auto; width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.06); border: none; color: var(--grey);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; transition: all 0.2s; flex-shrink: 0;
+  }
+  .settings-close:hover { background: rgba(255,46,99,0.15); color: var(--red); }
+  .settings-body { flex: 1; padding: 8px 0 32px; }
+  .settings-section-label {
+    font-family: 'Rajdhani'; font-size: 10px; font-weight: 700;
+    letter-spacing: 3px; color: var(--grey); text-transform: uppercase;
+    padding: 20px 24px 8px;
+  }
+  .settings-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 24px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    cursor: pointer; transition: background 0.2s;
+  }
+  .settings-item:hover { background: rgba(255,255,255,0.03); }
+  .settings-item-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+  .si-red { background: var(--red-dim); color: var(--red); }
+  .si-blue { background: var(--blue-dim); color: var(--blue); }
+  .si-grey { background: rgba(255,255,255,0.05); color: var(--grey); }
+  .si-gold { background: rgba(255,215,0,0.1); color: #FFD700; }
+  .si-green { background: rgba(39,174,96,0.12); color: #2ecc71; }
+  .settings-item-text { flex: 1; }
+  .settings-item-label { font-family: 'Rajdhani'; font-size: 15px; font-weight: 600; }
+  .settings-item-sub { font-size: 11px; color: var(--grey); margin-top: 1px; }
+  .settings-item-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  /* Toggle switch */
+  .toggle-switch {
+    width: 44px; height: 24px; border-radius: 12px; position: relative;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.12);
+    cursor: pointer; transition: background 0.3s;
+    flex-shrink: 0;
+  }
+  .toggle-switch.on { background: var(--red); border-color: var(--red); }
+  .toggle-switch::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--white); transition: transform 0.3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  }
+  .toggle-switch.on::after { transform: translateX(20px); }
+  .settings-value {
+    font-family: 'Rajdhani'; font-size: 13px; color: var(--blue); font-weight: 600;
+  }
+  /* Theme toggle row */
+  .theme-toggle-row {
+    display: flex; margin: 16px 24px; border-radius: 12px; overflow: hidden;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  }
+  .theme-opt {
+    flex: 1; padding: 12px; text-align: center; cursor: pointer;
+    font-family: 'Rajdhani'; font-size: 13px; font-weight: 700; letter-spacing: 1px;
+    color: var(--grey); display: flex; align-items: center; justify-content: center; gap: 7px;
+    transition: all 0.25s;
+  }
+  .theme-opt.active {
+    background: linear-gradient(135deg, var(--red), #c5003f);
+    color: #fff; box-shadow: 0 0 14px var(--red-glow);
+  }
+
+
+  /* ─── TRENDING HORIZONTAL SLIDER (cinematic poster cards) ─── */
+  .trending-slider-wrap {
+    position: relative; overflow: hidden; padding: 0 0 12px;
+  }
+  .trending-slider {
+    display: flex; gap: 16px; overflow-x: auto;
+    padding: 0 24px 8px; scroll-snap-type: x mandatory;
+    scrollbar-width: none; scroll-behavior: smooth;
+  }
+  .trending-slider::-webkit-scrollbar { display: none; }
+  .trending-poster-card {
+    flex: 0 0 200px; border-radius: 14px; overflow: hidden;
+    position: relative; cursor: pointer; scroll-snap-align: start;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    aspect-ratio: 2/3;
+  }
+  .trending-poster-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 24px 60px rgba(255,46,99,0.4), 0 0 0 2px rgba(255,46,99,0.5);
+    z-index: 10;
+  }
+  .trending-poster-card img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: filter 0.3s;
+  }
+  .trending-poster-card:hover img { filter: brightness(1.1) saturate(1.3); }
+  .trending-poster-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(13,13,13,0.98) 0%, rgba(13,13,13,0.4) 45%, transparent 70%);
+    transition: opacity 0.3s;
+  }
+  .trending-poster-content {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 14px 12px;
+  }
+  .trending-poster-rank {
+    font-family: 'Bebas Neue'; font-size: 13px; letter-spacing: 2px;
+    color: var(--red); margin-bottom: 4px;
+  }
+  .trending-poster-title {
+    font-family: 'Rajdhani'; font-size: 15px; font-weight: 700; line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .trending-poster-meta {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'Rajdhani'; font-size: 11px; color: rgba(255,255,255,0.6);
+  }
+  .trending-poster-meta .star { color: #FFD700; }
+  .trending-play-btn {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(255,46,99,0.9); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow: 0 0 24px var(--red-glow);
+  }
+  .trending-poster-card:hover .trending-play-btn { transform: translate(-50%, -50%) scale(1); }
+  .trending-play-btn i { font-size: 18px; margin-left: 3px; color: #fff; }
+
+  /* ─── MEDIA PLAYER ─── */
+  #screen-player { position: fixed; inset: 0; z-index: 300; background: #000; }
+  #screen-player.active { display: flex; flex-direction: column; }
+  .player-top {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 20px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
+    transition: opacity 0.3s;
+  }
+  .player-back-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.1); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #fff; font-size: 16px; flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .player-back-btn:hover { background: var(--red-dim); border-color: var(--red); }
+  .player-title-info { flex: 1; min-width: 0; }
+  .player-title-info h3 {
+    font-family: 'Bebas Neue'; font-size: 22px; letter-spacing: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff;
+  }
+  .player-title-info span { font-family: 'Rajdhani'; font-size: 12px; color: rgba(255,255,255,0.5); }
+  .player-video-wrap {
+    position: relative; flex: 1; background: #000;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #player-video {
+    width: 100%; height: 100%; object-fit: contain;
+    max-height: calc(100vh - 140px);
+  }
+  .player-center-controls {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center; gap: 32px;
+    opacity: 0; transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .player-video-wrap:hover .player-center-controls,
+  .player-video-wrap.show-controls .player-center-controls { opacity: 1; pointer-events: all; }
+  .player-ctrl-btn {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(12px);
+    border: 2px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #fff; font-size: 22px;
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .player-ctrl-btn.main { width: 72px; height: 72px; font-size: 28px; background: rgba(255,46,99,0.8); border-color: var(--red); box-shadow: 0 0 24px var(--red-glow); }
+  .player-ctrl-btn:hover { transform: scale(1.1); border-color: #fff; }
+  .player-bar {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
+    padding: 16px 20px 24px;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .player-video-wrap:hover .player-bar,
+  .player-video-wrap.show-controls .player-bar { opacity: 1; }
+  .player-seek-wrap { position: relative; margin-bottom: 12px; cursor: pointer; }
+  .player-seek-bg {
+    height: 4px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: visible; position: relative;
+  }
+  .player-seek-fill {
+    height: 100%; background: linear-gradient(to right, var(--red), #FF6B9D);
+    border-radius: 4px; position: relative; transition: width 0.1s linear;
+  }
+  .player-seek-thumb {
+    position: absolute; right: -6px; top: -4px;
+    width: 12px; height: 12px; border-radius: 50%; background: var(--red);
+    box-shadow: 0 0 8px var(--red-glow);
+  }
+  .player-time-row {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+  }
+  .player-time { font-family: 'Rajdhani'; font-size: 13px; color: rgba(255,255,255,0.7); }
+  .player-bottom-btns { display: flex; align-items: center; gap: 16px; }
+  .player-bottom-btn {
+    background: none; border: none; color: rgba(255,255,255,0.7);
+    cursor: pointer; font-size: 18px; transition: all 0.2s; padding: 4px;
+  }
+  .player-bottom-btn:hover { color: #fff; transform: scale(1.1); }
+  .player-volume { display: flex; align-items: center; gap: 8px; flex: 1; max-width: 120px; }
+  .player-volume-slider {
+    flex: 1; height: 3px; -webkit-appearance: none; appearance: none;
+    background: rgba(255,255,255,0.2); border-radius: 4px; outline: none; cursor: pointer;
+  }
+  .player-volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%;
+    background: #fff; cursor: pointer;
+  }
+  .player-quality-badge {
+    margin-left: auto; font-family: 'Rajdhani'; font-size: 12px; font-weight: 700;
+    color: var(--blue); letter-spacing: 1px; cursor: pointer;
+    background: var(--blue-dim); border: 1px solid rgba(8,217,214,0.3);
+    padding: 3px 10px; border-radius: 6px; transition: all 0.2s;
+  }
+  .player-quality-badge:hover { background: rgba(8,217,214,0.2); }
+  .player-no-video {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 20px; flex: 1; color: rgba(255,255,255,0.5); text-align: center; padding: 40px;
+  }
+  .player-no-video i { font-size: 64px; color: var(--red); opacity: 0.4; }
+  .player-no-video h3 { font-family: 'Bebas Neue'; font-size: 28px; letter-spacing: 2px; color: #fff; }
+  .player-no-video p { font-family: 'Rajdhani'; font-size: 14px; max-width: 280px; line-height: 1.6; }
+  .player-file-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--red-dim); border: 1px solid var(--red);
+    color: var(--red); padding: 12px 24px; border-radius: 10px;
+    font-family: 'Rajdhani'; font-size: 15px; font-weight: 700; letter-spacing: 1px;
+    cursor: pointer; transition: all 0.25s;
+  }
+  .player-file-btn:hover { background: var(--red); color: #fff; }
+
+  /* ─── MESSAGES SCREEN ─── */
+  #screen-messages { display: none; }
+  #screen-messages.active { display: flex; flex-direction: column; }
+  .messages-layout { display: flex; flex-direction: column; height: 100vh; padding-top: 70px; padding-bottom: 80px; }
+  .messages-header {
+    padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(13,13,13,0.9); backdrop-filter: blur(8px);
+  }
+  .messages-back {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.06); border: none;
+    color: var(--grey); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; transition: all 0.2s; flex-shrink: 0;
+  }
+  .messages-back:hover { background: var(--red-dim); color: var(--red); }
+  .msg-chat-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--red), var(--blue));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue'; font-size: 18px; flex-shrink: 0;
+    box-shadow: 0 0 12px var(--red-glow);
+  }
+  .msg-chat-info h4 { font-family: 'Rajdhani'; font-size: 17px; font-weight: 700; }
+  .msg-chat-info span { font-size: 11px; color: #2ecc71; font-family: 'Rajdhani'; }
+  .msg-list { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; scrollbar-width: thin; scrollbar-color: var(--red) transparent; }
+  .msg-row { display: flex; gap: 8px; align-items: flex-end; }
+  .msg-row.mine { flex-direction: row-reverse; }
+  .msg-avatar-small {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, rgba(255,46,99,0.4), rgba(8,217,214,0.4));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-family: 'Bebas Neue';
+  }
+  .msg-bubble-wrap { max-width: 72%; display: flex; flex-direction: column; gap: 3px; }
+  .msg-row.mine .msg-bubble-wrap { align-items: flex-end; }
+  .msg-sender { font-family: 'Rajdhani'; font-size: 10px; color: var(--grey); padding: 0 4px; }
+  .msg-bubble {
+    padding: 10px 14px; border-radius: 18px; font-family: 'Exo 2'; font-size: 14px; line-height: 1.5;
+    max-width: 100%;
+  }
+  .msg-bubble.mine {
+    background: linear-gradient(135deg, var(--red), #c5003f); color: #fff;
+    border-bottom-right-radius: 4px; box-shadow: 0 4px 12px var(--red-dim);
+  }
+  .msg-bubble.theirs {
+    background: rgba(255,255,255,0.07); color: var(--white);
+    border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.08);
+  }
+  .msg-time { font-size: 10px; color: var(--grey); padding: 0 4px; font-family: 'Rajdhani'; }
+  .msg-input-bar {
+    padding: 12px 16px; background: rgba(13,13,13,0.97);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; gap: 10px;
+    position: fixed; bottom: 80px; left: 0; right: 0; z-index: 50;
+  }
+  .msg-input {
+    flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px; padding: 10px 18px; color: var(--white);
+    font-family: 'Exo 2'; font-size: 14px; outline: none; transition: all 0.25s;
+  }
+  .msg-input:focus { border-color: var(--red); background: rgba(255,46,99,0.05); }
+  .msg-send-btn {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--red); border: none; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; flex-shrink: 0;
+    box-shadow: 0 0 16px var(--red-glow); transition: transform 0.2s;
+  }
+  .msg-send-btn:hover { transform: scale(1.1); }
+  .msg-contacts { flex: 1; overflow-y: auto; padding: 0 0 16px; }
+  .msg-contact-item {
+    display: flex; align-items: center; gap: 14px; padding: 14px 24px;
+    cursor: pointer; transition: background 0.2s; border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .msg-contact-item:hover { background: rgba(255,46,99,0.05); }
+  .msg-contact-avatar {
+    width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue'; font-size: 20px;
+  }
+  .msg-contact-info { flex: 1; min-width: 0; }
+  .msg-contact-name { font-family: 'Rajdhani'; font-size: 15px; font-weight: 700; }
+  .msg-contact-preview { font-size: 12px; color: var(--grey); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .msg-contact-time { font-size: 11px; color: var(--grey); font-family: 'Rajdhani'; }
+  .msg-unread-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--red); box-shadow: 0 0 6px var(--red-glow); flex-shrink: 0;
+  }
+
+  /* ─── COMMUNITY SCREEN ─── */
+  #screen-community { display: none; }
+  #screen-community.active { display: block; }
+  .community-content { padding: 96px 0 24px; }
+  .community-tabs {
+    display: flex; gap: 0; background: rgba(255,255,255,0.04);
+    margin: 0 24px 20px; border-radius: 10px; overflow: hidden;
+  }
+  .comm-tab {
+    flex: 1; padding: 11px; text-align: center;
+    font-family: 'Rajdhani'; font-size: 13px; font-weight: 700; letter-spacing: 1px;
+    color: var(--grey); cursor: pointer; transition: all 0.25s;
+  }
+  .comm-tab.active { background: var(--red-dim); color: var(--red); }
+  .community-post {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px; margin: 0 24px 16px; padding: 16px; transition: all 0.25s;
+  }
+  .community-post:hover { border-color: rgba(255,46,99,0.25); background: rgba(255,46,99,0.03); }
+  .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .post-avatar {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue'; font-size: 17px;
+  }
+  .post-meta { flex: 1; }
+  .post-meta h4 { font-family: 'Rajdhani'; font-size: 14px; font-weight: 700; }
+  .post-meta span { font-size: 11px; color: var(--grey); font-family: 'Rajdhani'; }
+  .post-badge {
+    font-family: 'Rajdhani'; font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    padding: 2px 8px; border-radius: 4px; text-transform: uppercase;
+  }
+  .post-badge.mod { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(8,217,214,0.3); }
+  .post-badge.top { background: rgba(255,215,0,0.1); color: #FFD700; border: 1px solid rgba(255,215,0,0.3); }
+  .post-body { font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.75); margin-bottom: 12px; }
+  .post-movie-ref {
+    display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.04);
+    border-radius: 8px; padding: 8px 12px; margin-bottom: 12px;
+    border: 1px solid rgba(255,255,255,0.07); cursor: pointer;
+  }
+  .post-movie-ref img { width: 36px; height: 52px; object-fit: cover; border-radius: 4px; }
+  .post-movie-ref .ref-info h5 { font-family: 'Rajdhani'; font-size: 13px; font-weight: 700; }
+  .post-movie-ref .ref-info span { font-size: 11px; color: var(--grey); }
+  .post-actions { display: flex; align-items: center; gap: 20px; }
+  .post-action-btn {
+    display: flex; align-items: center; gap: 5px;
+    font-family: 'Rajdhani'; font-size: 13px; color: var(--grey);
+    cursor: pointer; transition: all 0.2s; background: none; border: none;
+  }
+  .post-action-btn:hover { color: var(--red); }
+  .post-action-btn.liked { color: var(--red); }
+  .post-action-btn i { font-size: 14px; }
+  .compose-post-area {
+    margin: 0 24px 20px; background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px;
+  }
+  .compose-post-input {
+    width: 100%; background: none; border: none; outline: none;
+    color: var(--white); font-family: 'Exo 2'; font-size: 14px; resize: none;
+    line-height: 1.6; min-height: 60px;
+  }
+  .compose-post-input::placeholder { color: rgba(255,255,255,0.25); }
+  .compose-post-footer { display: flex; justify-content: flex-end; margin-top: 10px; gap: 10px; align-items: center; }
+  .compose-char-count { font-family: 'Rajdhani'; font-size: 12px; color: var(--grey); }
+  .compose-submit-btn {
+    background: var(--red); border: none; color: #fff;
+    font-family: 'Rajdhani'; font-size: 14px; font-weight: 700; letter-spacing: 1px;
+    padding: 8px 20px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+  }
+  .compose-submit-btn:hover { filter: brightness(1.15); transform: scale(1.03); }
+
+  /* ─── QUALITY PICKER MODAL ─── */
+  .quality-modal-overlay {
+    position: fixed; inset: 0; z-index: 400;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+    display: none; align-items: flex-end; justify-content: center;
+  }
+  .quality-modal-overlay.open { display: flex; }
+  .quality-modal {
+    background: #1A1A1A; border-radius: 20px 20px 0 0;
+    width: 100%; max-width: 480px; padding: 24px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .quality-modal h3 {
+    font-family: 'Bebas Neue'; font-size: 22px; letter-spacing: 2px; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .quality-modal h3 i { color: var(--blue); }
+  .quality-option {
+    display: flex; align-items: center; gap: 12px; padding: 12px;
+    border-radius: 10px; cursor: pointer; transition: all 0.2s;
+    border: 1px solid transparent; margin-bottom: 8px;
+  }
+  .quality-option:hover { background: rgba(255,255,255,0.05); }
+  .quality-option.selected { background: var(--red-dim); border-color: rgba(255,46,99,0.4); }
+  .quality-option-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+  }
+  .quality-option h4 { font-family: 'Rajdhani'; font-size: 16px; font-weight: 700; }
+  .quality-option p { font-size: 12px; color: var(--grey); margin-top: 2px; }
+  .quality-option .quality-check { margin-left: auto; color: var(--red); display: none; }
+  .quality-option.selected .quality-check { display: block; }
+
+  .glass-card { background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; }
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: linear-gradient(rgba(255,46,99,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,46,99,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     SIGNUP SCREEN — DRAMATIC
+  ═══════════════════════════════════════════════════════════ */
+  #screen-signup {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  #screen-signup.active { display: flex; }
+
+  .signup-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 20% 20%, rgba(255,46,99,0.18) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(8,217,214,0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(139,0,35,0.08) 0%, transparent 70%),
+                #080808;
+  }
+
+  /* Cinematic film strip */
+  .signup-filmstrip {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; gap: 0; overflow: hidden; opacity: 0.07;
+  }
+  .filmstrip-col {
+    flex: 0 0 160px; display: flex; flex-direction: column; gap: 3px;
+    animation: particleDrift 20s linear infinite;
+  }
+  .filmstrip-col:nth-child(even) { animation-duration: 26s; animation-delay: -10s; }
+  .filmstrip-col:nth-child(3n) { animation-duration: 22s; animation-delay: -5s; }
+  .filmstrip-frame {
+    flex: 0 0 100px; border: 1px solid rgba(255,255,255,0.15);
+    background: linear-gradient(135deg, rgba(255,46,99,0.08), rgba(8,217,214,0.04));
+    border-radius: 2px;
+  }
+
+  /* Particles */
+  .signup-particle {
+    position: absolute; width: 2px; height: 2px; border-radius: 50%;
+    background: var(--red); pointer-events: none;
+    animation: particleDrift linear infinite;
+  }
+
+  /* Red beam */
+  .signup-beam {
+    position: absolute; top: 0; left: 50%; width: 1px;
+    height: 100%; transform: translateX(-50%);
+    background: linear-gradient(to bottom, transparent 0%, rgba(255,46,99,0.4) 30%, rgba(255,46,99,0.6) 50%, rgba(255,46,99,0.4) 70%, transparent 100%);
+    filter: blur(8px); opacity: 0.5;
+  }
+
+  .signup-card {
+    position: relative; z-index: 10; width: 100%; max-width: 420px;
+    background: rgba(10,10,10,0.88); backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,46,99,0.25); border-radius: 20px;
+    padding: 44px 36px 40px; margin: 16px;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.03),
+                0 32px 80px rgba(0,0,0,0.9),
+                0 0 60px rgba(255,46,99,0.12),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+    animation: zoomIn 0.8s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .signup-logo {
+    font-family: 'Bebas Neue'; font-size: 42px; letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--red) 0%, #FF6B9D 50%, var(--blue) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-align: center; display: block; margin-bottom: 4px;
+    animation: logoReveal 1.2s cubic-bezier(0.34,1.56,0.64,1);
+    filter: drop-shadow(0 0 20px rgba(255,46,99,0.5));
+  }
+  .signup-tagline {
+    text-align: center; font-family: 'Rajdhani'; font-size: 11px; letter-spacing: 4px;
+    color: var(--grey); text-transform: uppercase; margin-bottom: 36px;
+    animation: slideUp 0.8s ease 0.3s both;
+  }
+  .signup-tabs {
+    display: flex; background: rgba(255,255,255,0.04); border-radius: 10px;
+    overflow: hidden; margin-bottom: 28px;
+    animation: slideUp 0.8s ease 0.4s both;
+  }
+  .signup-tab {
+    flex: 1; padding: 11px; text-align: center;
+    font-family: 'Rajdhani'; font-size: 14px; font-weight: 700; letter-spacing: 2px;
+    color: var(--grey); cursor: pointer; transition: all 0.3s;
+  }
+  .signup-tab.active {
+    background: linear-gradient(135deg, var(--red), #c5003f);
+    color: var(--white); box-shadow: 0 0 16px var(--red-glow);
+  }
+  .signup-form { display: flex; flex-direction: column; gap: 16px; animation: slideUp 0.8s ease 0.5s both; }
+  .input-group { position: relative; }
+  .input-group i {
+    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+    color: var(--grey); font-size: 14px; transition: color 0.3s; pointer-events: none;
+  }
+  .signup-input {
+    width: 100%; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+    padding: 15px 16px 15px 44px;
+    color: var(--white); font-family: 'Exo 2'; font-size: 15px; outline: none;
+    transition: all 0.3s;
+  }
+  .signup-input::placeholder { color: rgba(255,255,255,0.25); }
+  .signup-input:focus {
+    border-color: var(--red); background: rgba(255,46,99,0.04);
+    animation: inputGlow 2s ease infinite;
+  }
+  .signup-input:focus + i, .input-group:focus-within i { color: var(--red); }
+  /* fix: icon comes after input in DOM, use sibling trick differently */
+  .input-group:focus-within i { color: var(--red); }
+  .signup-btn {
+    width: 100%; padding: 16px; border: none; border-radius: 10px;
+    background: linear-gradient(135deg, var(--red) 0%, #c5003f 100%);
+    color: var(--white); font-family: 'Rajdhani'; font-size: 17px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
+    box-shadow: 0 0 24px var(--red-glow), 0 4px 20px rgba(0,0,0,0.5);
+    animation: glowPulse 2.5s ease infinite;
+    transition: transform 0.2s, filter 0.2s; position: relative; overflow: hidden;
+    margin-top: 4px;
+  }
+  .signup-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    background-size: 200% 100%; animation: shimmer 2s linear infinite;
+  }
+  .signup-btn:hover { transform: translateY(-2px) scale(1.02); filter: brightness(1.15); }
+  .signup-divider {
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'Rajdhani'; font-size: 12px; color: rgba(255,255,255,0.2); letter-spacing: 2px;
+  }
+  .signup-divider::before, .signup-divider::after {
+    content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08);
+  }
+  .social-btns { display: flex; gap: 10px; }
+  .social-btn {
+    flex: 1; padding: 13px 10px; border-radius: 10px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
+    color: var(--grey); font-family: 'Rajdhani'; font-size: 14px; font-weight: 600;
+    cursor: pointer; text-align: center; transition: all 0.25s; letter-spacing: 1px;
+    display: flex; align-items: center; justify-content: center; gap: 9px;
+  }
+  .social-btn i { font-size: 20px; }
+  .google-btn { border-color: rgba(234,67,53,0.35); }
+  .google-btn i { color: #EA4335; filter: drop-shadow(0 0 6px rgba(234,67,53,0.5)); }
+  .google-btn:hover { background: rgba(234,67,53,0.1); border-color: #EA4335; color: var(--white); }
+  .apple-btn { border-color: rgba(255,255,255,0.25); }
+  .apple-btn i { color: #f5f5f7; filter: drop-shadow(0 0 6px rgba(255,255,255,0.4)); }
+  .apple-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.5); color: var(--white); }
+  .signup-footer {
+    text-align: center; margin-top: 20px;
+    font-family: 'Rajdhani'; font-size: 12px; color: rgba(255,255,255,0.2); letter-spacing: 1px;
+    animation: slideUp 0.8s ease 0.6s both;
+  }
+  .signup-footer a { color: var(--blue); cursor: pointer; text-decoration: none; }
+  .signup-footer a:hover { text-shadow: 0 0 8px var(--blue-glow); }
+
+  /* Dramatic quote above card */
+  .signup-quote {
+    position: absolute; top: 24px; left: 0; right: 0;
+    text-align: center; z-index: 10;
+    font-family: 'Bebas Neue'; font-size: clamp(13px, 2.5vw, 18px);
+    letter-spacing: 4px; color: rgba(255,255,255,0.12);
+    pointer-events: none; text-transform: uppercase;
+  }
+  .forgot-link {
+    text-align: right; font-family: 'Rajdhani'; font-size: 12px;
+    color: var(--blue); cursor: pointer; letter-spacing: 1px;
+    margin-top: -8px;
+  }
+  .forgot-link:hover { text-shadow: 0 0 8px var(--blue-glow); }
+
+  /* Genre pills featured */
+  .genre-strip {
+    display: flex; gap: 8px; overflow-x: auto; padding: 12px 24px 0; scrollbar-width: none;
+  }
+  .genre-strip::-webkit-scrollbar { display: none; }
+  .genre-pill {
+    flex: 0 0 auto; padding: 6px 14px; border-radius: 20px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    font-family: 'Rajdhani'; font-size: 12px; font-weight: 600; color: var(--grey);
+    cursor: pointer; letter-spacing: 1px; transition: all 0.2s; white-space: nowrap;
+  }
+  .genre-pill.active, .genre-pill:hover { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><i class="fa fa-check-circle"></i> <span id="toast-msg">Added to downloads!</span></div>
+
+<!-- ═══════════════════════════════ SIGNUP SCREEN ═══════════════════════════════ -->
+<div class="screen active" id="screen-signup">
+  <div class="signup-bg"></div>
+
+  <!-- Atmospheric film strip -->
+  <div class="signup-filmstrip" id="filmstrip"></div>
+  <div class="signup-beam"></div>
+
+  <!-- Floating particles -->
+  <div id="signup-particles"></div>
+
+  <div class="signup-quote">Unlimited Movies · Unlimited Worlds · Unlimited You</div>
+
+  <div class="signup-card">
+    <span class="signup-logo">Movie<span style="-webkit-text-fill-color:var(--blue);color:var(--blue)">Max</span></span>
+    <div class="signup-tagline">Trident Technologies · Stream Everything</div>
+
+    <div class="signup-tabs">
+      <div class="signup-tab active" id="tab-signup" onclick="switchAuthTab('signup')">SIGN UP</div>
+      <div class="signup-tab" id="tab-login" onclick="switchAuthTab('login')">LOG IN</div>
+    </div>
+
+    <!-- SIGN UP FORM -->
+    <div class="signup-form" id="form-signup">
+      <div class="input-group">
+        <input type="text" class="signup-input" placeholder="Full Name" id="su-name">
+        <i class="fa fa-user"></i>
+      </div>
+      <div class="input-group">
+        <input type="email" class="signup-input" placeholder="Email Address" id="su-email">
+        <i class="fa fa-envelope"></i>
+      </div>
+      <div class="input-group">
+        <input type="password" class="signup-input" placeholder="Create Password" id="su-pass">
+        <i class="fa fa-lock"></i>
+      </div>
+      <div class="input-group">
+        <input type="password" class="signup-input" placeholder="Confirm Password" id="su-pass2">
+        <i class="fa fa-shield-alt"></i>
+      </div>
+      <button class="signup-btn" onclick="handleSignup()">
+        <i class="fa fa-film" style="margin-right:8px"></i> START STREAMING
+      </button>
+      <div class="signup-divider">OR CONTINUE WITH</div>
+      <div class="social-btns">
+        <div class="social-btn google-btn" onclick="socialAuth('Google')"><i class="fab fa-google"></i> Google</div>
+        <div class="social-btn apple-btn" onclick="socialAuth('Apple')"><i class="fab fa-apple"></i> Apple</div>
+      </div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="signup-form" id="form-login" style="display:none">
+      <div class="input-group">
+        <input type="email" class="signup-input" placeholder="Email Address" id="li-email">
+        <i class="fa fa-envelope"></i>
+      </div>
+      <div class="input-group">
+        <input type="password" class="signup-input" placeholder="Password" id="li-pass">
+        <i class="fa fa-lock"></i>
+      </div>
+      <div class="forgot-link" onclick="showToast('Password reset link sent!','fa-envelope')">Forgot Password?</div>
+      <button class="signup-btn" onclick="handleLogin()">
+        <i class="fa fa-play" style="margin-right:8px"></i> ENTER MOVIE MAX
+      </button>
+      <div class="signup-divider">OR CONTINUE WITH</div>
+      <div class="social-btns">
+        <div class="social-btn google-btn" onclick="socialAuth('Google')"><i class="fab fa-google"></i> Google</div>
+        <div class="social-btn apple-btn" onclick="socialAuth('Apple')"><i class="fab fa-apple"></i> Apple</div>
+      </div>
+    </div>
+
+    <div class="signup-footer">
+      By continuing you agree to our <a>Terms</a> & <a>Privacy Policy</a>.<br>
+      © 2025 Movie Max · Trident Technologies
+    </div>
+  </div>
+</div>
+
+<!-- TOP NAV (hidden on signup) -->
+<nav class="topnav" id="topnav" style="display:none">
+  <div class="logo" onclick="showScreen('home')">Movie<span>Max</span></div>
+  <div class="topnav-right">
+    <span class="topnav-tag">TRIDENT TECH</span>
+    <div style="cursor:pointer;color:var(--grey);font-size:18px;transition:color 0.2s" onclick="openSettings()" title="App Settings"><i class="fa fa-cog"></i></div>
+    <div class="avatar" id="topnav-avatar" onclick="showScreen('profile')">
+      <span id="avatar-initials">U</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════ HOME SCREEN ═══════════════════════════════ -->
+<div class="screen" id="screen-home">
+
+  <!-- HERO -->
+  <div class="hero" id="hero-section" onclick="openDetail(heroMovies[currentHeroIdx])">
+    <div class="hero-bg">
+      <div class="hero-poster" id="hero-poster"></div>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-overlay-sides"></div>
+    <div class="hero-scan"></div>
+    <div class="hero-content">
+      <div class="hero-badge" id="hero-badge"><i class="fa fa-fire"></i> TRENDING NOW</div>
+      <h1 class="hero-title" id="hero-title">DUNE:<em>Part Two</em></h1>
+      <div class="hero-meta">
+        <span class="rating"><i class="fa fa-star"></i> <span id="hero-rating">8.5</span></span>
+        <span class="dot"></span>
+        <span id="hero-year">2024</span>
+        <span class="dot"></span>
+        <span id="hero-duration">2h 46m</span>
+        <span class="dot"></span>
+        <span id="hero-genre">Sci-Fi</span>
+      </div>
+      <p class="hero-desc" id="hero-desc">Paul Atreides unites with the Fremen while on a warpath of revenge against the conspirators who destroyed his family.</p>
+      <div class="hero-buttons">
+        <button class="btn-primary" id="hero-play-btn" onclick="openPlayer(heroMovies[currentHeroIdx], event)">
+          <i class="fa fa-play"></i> WATCH NOW
+        </button>
+        <button class="btn-secondary" id="hero-info-btn" onclick="openDetail(heroMovies[currentHeroIdx], event)">
+          <i class="fa fa-info-circle"></i> MORE INFO
+        </button>
+      </div>
+    </div>
+    <!-- Hero dots -->
+    <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:5" id="hero-dots"></div>
+  </div>
+
+  <!-- LIVE TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker" id="ticker">
+      <span class="ticker-item"><span class="dot">●</span> <strong>Dune: Part Two</strong> · Now Available</span>
+      <span class="ticker-item"><span class="dot">●</span> <strong>Ironheart</strong> · Jun 24 · Marvel</span>
+      <span class="ticker-item"><span class="dot">●</span> <strong>Oppenheimer</strong> · Remastered 4K</span>
+      <span class="ticker-item"><span class="dot">●</span> <strong>Inception</strong> · Director's Cut</span>
+      <span class="ticker-item"><span class="dot">●</span> <strong>The Matrix</strong> · Now Available</span>
+      <span class="ticker-item"><span class="dot">●</span> <strong>Dune: Part Two</strong> · Now Available</span>
+      <span class="ticker-item"><span class="dot">●</span> <strong>Ironheart</strong> · Jun 24 · Marvel</span>
+      <span class="ticker-item"><span class="dot">●</span> <strong>Oppenheimer</strong> · Remastered 4K</span>
+      <span class="ticker-item"><span class="dot">●</span> <strong>Inception</strong> · Director's Cut</span>
+      <span class="ticker-item"><span class="dot">●</span> <strong>The Matrix</strong> · Now Available</span>
+    </div>
+  </div>
+
+  <!-- GENRE PILLS -->
+  <div class="genre-strip">
+    <div class="genre-pill active">All</div>
+    <div class="genre-pill">Movies</div>
+    <div class="genre-pill">Series</div>
+    <div class="genre-pill">Anime</div>
+    <div class="genre-pill">Action</div>
+    <div class="genre-pill">Sci-Fi</div>
+    <div class="genre-pill">Drama</div>
+    <div class="genre-pill">Nollywood</div>
+    <div class="genre-pill">Hollywood</div>
+    <div class="genre-pill">Love Story</div>
+    <div class="genre-pill">High School</div>
+    <div class="genre-pill">Adventure</div>
+    <div class="genre-pill">Comedy</div>
+    <div class="genre-pill">Thriller</div>
+    <div class="genre-pill">Horror</div>
+    <div class="genre-pill">Fantasy</div>
+    <div class="genre-pill">Documentary</div>
+    <div class="genre-pill">Crime</div>
+    <div class="genre-pill">Mystery</div>
+    <div class="genre-pill">Western</div>
+    <div class="genre-pill">K-Drama</div>
+    <div class="genre-pill">Bollywood</div>
+  </div>
+
+  <!-- TRENDING NOW — horizontal cinematic poster slider -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Trending Now</div>
+      <button class="see-all" onclick="showScreen('search')">See All</button>
+    </div>
+    <div class="trending-slider-wrap">
+      <div class="trending-slider" id="trending-slider">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP 10 TODAY -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Top 10 Today</div>
+    </div>
+    <div class="cards-row" id="row-top10"></div>
+  </div>
+
+  <!-- TOP RATED -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Top Rated</div>
+      <button class="see-all" onclick="showScreen('search')">See All</button>
+    </div>
+    <div class="cards-row" id="row-toprated"></div>
+  </div>
+
+  <!-- ACTION HITS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Action Hits</div>
+      <button class="see-all" onclick="showScreen('search')">See All</button>
+    </div>
+    <div class="cards-row" id="row-action"></div>
+  </div>
+
+  <!-- UPCOMING CALENDAR -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Upcoming Calendar</div>
+    </div>
+    <div class="cards-row" id="row-upcoming"></div>
+  </div>
+
+  <!-- NEW RELEASES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">New Releases</div>
+      <button class="see-all" onclick="showScreen('search')">See All</button>
+    </div>
+    <div class="cards-row" id="row-new"></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════ SEARCH SCREEN ═══════════════════════════════ -->
+<div class="screen" id="screen-search">
+  <div class="search-screen-content">
+    <div class="search-bar-wrap">
+      <i class="fa fa-search"></i>
+      <input type="text" class="search-input" id="search-input"
+        placeholder="Search movies, genres, actors..." oninput="liveSearch(this.value)">
+    </div>
+    <div class="search-categories">
+      <span class="cat-tag active" onclick="filterCat(this,'All')">All</span>
+      <span class="cat-tag" onclick="filterCat(this,'Action')">Action</span>
+      <span class="cat-tag" onclick="filterCat(this,'Sci-Fi')">Sci-Fi</span>
+      <span class="cat-tag" onclick="filterCat(this,'Drama')">Drama</span>
+      <span class="cat-tag" onclick="filterCat(this,'Thriller')">Thriller</span>
+      <span class="cat-tag" onclick="filterCat(this,'Horror')">Horror</span>
+      <span class="cat-tag" onclick="filterCat(this,'Comedy')">Comedy</span>
+      <span class="cat-tag" onclick="filterCat(this,'Adventure')">Adventure</span>
+      <span class="cat-tag" onclick="filterCat(this,'Love Story')">Love Story</span>
+      <span class="cat-tag" onclick="filterCat(this,'High School')">High School</span>
+      <span class="cat-tag" onclick="filterCat(this,'Anime')">Anime</span>
+      <span class="cat-tag" onclick="filterCat(this,'Fantasy')">Fantasy</span>
+      <span class="cat-tag" onclick="filterCat(this,'Crime')">Crime</span>
+      <span class="cat-tag" onclick="filterCat(this,'Mystery')">Mystery</span>
+      <span class="cat-tag" onclick="filterCat(this,'Nollywood')">Nollywood</span>
+      <span class="cat-tag" onclick="filterCat(this,'K-Drama')">K-Drama</span>
+      <span class="cat-tag" onclick="filterCat(this,'Documentary')">Documentary</span>
+      <span class="cat-tag" onclick="filterCat(this,'Western')">Western</span>
+    </div>
+    <div class="search-grid" id="search-grid"></div>
+    <div class="search-empty" id="search-empty" style="display:none">
+      <i class="fa fa-film"></i>
+      <p>No movies found</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ DETAIL SCREEN ═══════════════════════════════ -->
+<div class="screen" id="screen-detail">
+  <div class="detail-hero">
+    <div class="detail-bg" id="detail-bg"></div>
+    <div class="detail-overlay"></div>
+    <div class="detail-back" onclick="goBack()"><i class="fa fa-arrow-left"></i></div>
+    <div class="detail-poster-wrap">
+      <img id="detail-poster" src="" alt="">
+    </div>
+  </div>
+  <div class="detail-content">
+    <h1 class="detail-title" id="detail-title"></h1>
+    <div class="detail-meta2">
+      <div class="detail-rating-big"><i class="fa fa-star"></i> <span id="detail-rating"></span></div>
+      <span class="detail-tag" id="detail-genre"></span>
+      <span class="detail-info-strip" id="detail-info"></span>
+    </div>
+  </div>
+  <div class="detail-desc-section">
+    <p class="detail-desc" id="detail-desc"></p>
+    <div class="detail-actions">
+      <button class="btn-primary" id="dl-btn" onclick="openPlayer(currentDetailId)">
+        <i class="fa fa-play"></i> WATCH NOW
+      </button>
+      <button class="btn-secondary" onclick="downloadCurrent()">
+        <i class="fa fa-download"></i> DOWNLOAD
+      </button>
+      <button class="btn-secondary" onclick="showToast('Opening trailer…','fa-play')">
+        <i class="fa fa-film"></i> TRAILER
+      </button>
+    </div>
+  </div>
+  <div class="detail-credits">
+    <div class="credits-title">Cast</div>
+    <div class="cast-row" id="cast-row"></div>
+  </div>
+  <div class="section">
+    <div class="section-header"><div class="section-title">You May Also Like</div></div>
+    <div class="cards-row" id="related-row"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ DOWNLOADS SCREEN ═══════════════════════════════ -->
+<div class="screen" id="screen-downloads">
+  <div class="downloads-content">
+    <div class="downloads-header">
+      <div class="page-title">DOWNLOADS</div>
+      <div class="storage-badge"><i class="fa fa-hdd"></i> 2.0 GB Free</div>
+    </div>
+    <div class="dl-tabs">
+      <div class="dl-tab active">Movie Max</div>
+      <div class="dl-tab">Local Files <span style="color:var(--grey);margin-left:4px">67</span></div>
+      <div class="dl-tab">Received</div>
+    </div>
+    <div class="storage-bar-wrap">
+      <div class="storage-label"><span>Storage Used</span><span>3.5 GB of 10 GB</span></div>
+      <div class="storage-bar"><div class="storage-fill"></div></div>
+    </div>
+    <div class="dl-list" id="dl-list"></div>
+    <div class="find-sources-btn" onclick="showToast('Finding free sources…','fa-search')">
+      <i class="fa fa-globe" style="margin-right:8px"></i> FIND MORE FREE SOURCES
+    </div>
+    <!-- FOR YOU section at bottom of downloads -->
+    <div style="margin-top:28px">
+      <div class="section-header" style="padding:0">
+        <div class="section-title">For You</div>
+      </div>
+      <div class="cards-row" id="row-foryou" style="margin-top:12px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ PROFILE SCREEN ═══════════════════════════════ -->
+<div class="screen" id="screen-profile">
+  <div class="profile-content">
+    <div class="profile-banner">
+      <div class="profile-banner-gfx"></div>
+    </div>
+    <div class="profile-hero">
+      <div class="profile-avatar-big" id="profile-avatar-big">
+        <span id="profile-avatar-letter">U</span>
+      </div>
+      <div class="profile-name" id="profile-name-display">USERNAME</div>
+      <div class="profile-id">ID: <span id="profile-id-display">00000000</span></div>
+      <div class="profile-sub" id="profile-email-display">member@email.com</div>
+      <div class="profile-plan" onclick="showToast('Premium plan active!','fa-crown')">
+        <i class="fa fa-crown"></i> PREMIUM PLAN
+      </div>
+    </div>
+
+    <!-- GET PREMIUM BANNER -->
+    <div class="profile-premium-banner" onclick="showToast('Premium upgrade coming soon!','fa-crown')">
+      <div class="premium-icon">👑</div>
+      <div class="premium-text">
+        <strong>Get Premium</strong>
+        <span>No ads · 720P quality · Multi-downloads</span>
+      </div>
+      <i class="fa fa-chevron-right premium-arrow"></i>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-dl">0</div>
+        <div class="stat-label">Downloads</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-watched">47</div>
+        <div class="stat-label">Watched</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">12</div>
+        <div class="stat-label">Watchlist</div>
+      </div>
+    </div>
+
+    <!-- WATCH HISTORY -->
+    <div style="margin-bottom:20px">
+      <div class="section-header" style="padding:0;margin-bottom:12px">
+        <div class="section-title" style="font-size:16px">Watch History</div>
+        <button class="see-all">See All</button>
+      </div>
+      <div class="watch-history-row" id="watch-history-row"></div>
+    </div>
+
+    <div class="profile-menu">
+      <div class="menu-item" onclick="openAccSettings()">
+        <div class="mi-icon mi-red"><i class="fa fa-user"></i></div>
+        <div>
+          <div class="mi-label">Account</div>
+          <div class="mi-sub">Edit your profile</div>
+        </div>
+        <i class="fa fa-chevron-right"></i>
+      </div>
+      <div class="menu-item" onclick="showToast('Subscription info coming soon','fa-crown')">
+        <div class="mi-icon mi-blue"><i class="fa fa-crown"></i></div>
+        <div>
+          <div class="mi-label">Subscription</div>
+          <div class="mi-sub">Premium · Renews Apr 15</div>
+        </div>
+        <i class="fa fa-chevron-right"></i>
+      </div>
+      <div class="menu-item" onclick="showScreen('downloads')">
+        <div class="mi-icon mi-red"><i class="fa fa-download"></i></div>
+        <div>
+          <div class="mi-label">My Downloads</div>
+          <div class="mi-sub" id="prof-dl-count">0 movies</div>
+        </div>
+        <i class="fa fa-chevron-right"></i>
+      </div>
+      <div class="menu-item" onclick="showScreen('messages')">
+        <div class="mi-icon mi-grey"><i class="fa fa-comment"></i></div>
+        <div>
+          <div class="mi-label">Messages</div>
+          <div class="mi-sub">Chat with friends</div>
+        </div>
+        <span class="mi-badge">2</span>
+        <i class="fa fa-chevron-right" style="margin-left:8px"></i>
+      </div>
+      <div class="menu-item" onclick="showScreen('community')">
+        <div class="mi-icon mi-grey"><i class="fa fa-users"></i></div>
+        <div>
+          <div class="mi-label">Community</div>
+          <div class="mi-sub">Posts & reviews</div>
+        </div>
+        <i class="fa fa-chevron-right"></i>
+      </div>
+      <div class="menu-item" onclick="openQualityPicker()">
+        <div class="mi-icon mi-grey"><i class="fa fa-sliders-h"></i></div>
+        <div>
+          <div class="mi-label">Playback Quality</div>
+          <div class="mi-sub" id="profile-quality-sub">Auto (up to 4K)</div>
+        </div>
+        <i class="fa fa-chevron-right"></i>
+      </div>
+      <div class="menu-item" onclick="showToast('New version available!','fa-info')">
+        <div class="mi-icon mi-blue"><i class="fa fa-info-circle"></i></div>
+        <div>
+          <div class="mi-label">About Movie Max</div>
+          <div class="mi-sub">v2.0.0 · Trident Technologies</div>
+        </div>
+        <span class="mi-badge" style="background:var(--blue)">NEW</span>
+        <i class="fa fa-chevron-right" style="margin-left:8px"></i>
+      </div>
+      <div class="menu-item" onclick="handleLogout()">
+        <div class="mi-icon" style="background:rgba(255,46,99,0.1);color:var(--red)"><i class="fa fa-sign-out-alt"></i></div>
+        <div>
+          <div class="mi-label" style="color:var(--red)">Log Out</div>
+          <div class="mi-sub">Sign out of Movie Max</div>
+        </div>
+        <i class="fa fa-chevron-right"></i>
+      </div>
+    </div>
+    <div class="branding-footer">
+      Powered by <span>Trident Technologies</span> · © 2025 Movie Max. All rights reserved.
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SETTINGS OVERLAY ═══ -->
+<div class="settings-overlay" id="settings-overlay" onclick="closeSettings()"></div>
+
+<!-- ═══ APP SETTINGS PANEL (slides from right) ═══ -->
+<div class="settings-panel" id="settings-panel">
+  <div class="settings-head">
+    <div class="settings-head-icon"><i class="fa fa-cog"></i></div>
+    <div>
+      <div class="settings-head-title">App Settings</div>
+      <div class="settings-head-sub">MOVIE MAX · TRIDENT TECH</div>
+    </div>
+    <button class="settings-close" onclick="closeSettings()"><i class="fa fa-times"></i></button>
+  </div>
+  <div class="settings-body">
+    <!-- Theme -->
+    <div class="settings-section-label">Appearance</div>
+    <div style="padding:0 0 4px">
+      <div class="theme-toggle-row">
+        <div class="theme-opt active" id="theme-dark" onclick="setTheme('dark')"><i class="fa fa-moon"></i> Dark</div>
+        <div class="theme-opt" id="theme-light" onclick="setTheme('light')"><i class="fa fa-sun"></i> Light</div>
+      </div>
+    </div>
+
+    <div class="settings-item" onclick="toggleSetting(this,'autoplay')">
+      <div class="settings-item-icon si-red"><i class="fa fa-play-circle"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Autoplay Trailers</div>
+        <div class="settings-item-sub">Play trailers automatically on hover</div>
+      </div>
+      <div class="settings-item-right"><div class="toggle-switch on" id="toggle-autoplay"></div></div>
+    </div>
+
+    <div class="settings-item" onclick="toggleSetting(this,'notifications')">
+      <div class="settings-item-icon si-blue"><i class="fa fa-bell"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Push Notifications</div>
+        <div class="settings-item-sub">New releases and recommendations</div>
+      </div>
+      <div class="settings-item-right"><div class="toggle-switch on" id="toggle-notifications"></div></div>
+    </div>
+
+    <div class="settings-item" onclick="toggleSetting(this,'downloads-wifi')">
+      <div class="settings-item-icon si-grey"><i class="fa fa-wifi"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Download on Wi-Fi Only</div>
+        <div class="settings-item-sub">Avoid mobile data charges</div>
+      </div>
+      <div class="settings-item-right"><div class="toggle-switch on" id="toggle-downloads-wifi"></div></div>
+    </div>
+
+    <div class="settings-section-label">Playback</div>
+
+    <div class="settings-item" onclick="cycleQuality()">
+      <div class="settings-item-icon si-gold"><i class="fa fa-film"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Video Quality</div>
+        <div class="settings-item-sub">Stream resolution setting</div>
+      </div>
+      <div class="settings-item-right"><span class="settings-value" id="quality-val">Auto (4K)</span></div>
+    </div>
+
+    <div class="settings-item" onclick="toggleSetting(this,'subtitles')">
+      <div class="settings-item-icon si-blue"><i class="fa fa-closed-captioning"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Subtitles</div>
+        <div class="settings-item-sub">Show subtitles by default</div>
+      </div>
+      <div class="settings-item-right"><div class="toggle-switch" id="toggle-subtitles"></div></div>
+    </div>
+
+    <div class="settings-item" onclick="toggleSetting(this,'audio-desc')">
+      <div class="settings-item-icon si-grey"><i class="fa fa-headphones"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Audio Descriptions</div>
+        <div class="settings-item-sub">Accessibility audio narration</div>
+      </div>
+      <div class="settings-item-right"><div class="toggle-switch" id="toggle-audio-desc"></div></div>
+    </div>
+
+    <div class="settings-section-label">Privacy & Data</div>
+
+    <div class="settings-item" onclick="toggleSetting(this,'personalized')">
+      <div class="settings-item-icon si-red"><i class="fa fa-chart-bar"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Personalized Recommendations</div>
+        <div class="settings-item-sub">Based on your watch history</div>
+      </div>
+      <div class="settings-item-right"><div class="toggle-switch on" id="toggle-personalized"></div></div>
+    </div>
+
+    <div class="settings-item" onclick="showToast('Cache cleared!','fa-trash')">
+      <div class="settings-item-icon si-grey"><i class="fa fa-database"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Clear Cache</div>
+        <div class="settings-item-sub">Frees up device storage</div>
+      </div>
+      <div class="settings-item-right"><span class="settings-value">128 MB</span></div>
+    </div>
+
+    <div class="settings-section-label">About</div>
+
+    <div class="settings-item">
+      <div class="settings-item-icon si-blue"><i class="fa fa-info-circle"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">App Version</div>
+        <div class="settings-item-sub">Trident Technologies</div>
+      </div>
+      <div class="settings-item-right"><span class="settings-value">v2.0.0</span></div>
+    </div>
+
+    <div class="settings-item" onclick="showToast('Terms of Service opened','fa-file-alt')">
+      <div class="settings-item-icon si-grey"><i class="fa fa-file-alt"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Terms of Service</div>
+        <div class="settings-item-sub">Legal information</div>
+      </div>
+      <div class="settings-item-right"><i class="fa fa-chevron-right" style="color:var(--grey);font-size:12px"></i></div>
+    </div>
+
+    <div class="settings-item" onclick="showToast('Privacy policy opened','fa-shield-alt')">
+      <div class="settings-item-icon si-grey"><i class="fa fa-shield-alt"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Privacy Policy</div>
+        <div class="settings-item-sub">How we use your data</div>
+      </div>
+      <div class="settings-item-right"><i class="fa fa-chevron-right" style="color:var(--grey);font-size:12px"></i></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ACCOUNT SETTINGS PANEL (slides from left) ═══ -->
+<div class="accsettings-panel" id="accsettings-panel">
+  <div class="settings-head">
+    <button class="settings-close" onclick="closeAccSettings()" style="margin-left:0;margin-right:auto"><i class="fa fa-times"></i></button>
+    <div style="flex:1">
+      <div class="settings-head-title">Account</div>
+      <div class="settings-head-sub">PROFILE & SECURITY</div>
+    </div>
+    <div class="settings-head-icon" style="background:var(--blue-dim);border-color:rgba(8,217,214,0.3);color:var(--blue)"><i class="fa fa-user"></i></div>
+  </div>
+  <div class="settings-body">
+    <div class="settings-section-label">Profile</div>
+
+    <div class="settings-item" onclick="showToast('Edit profile coming soon','fa-user-edit')">
+      <div class="settings-item-icon si-blue"><i class="fa fa-user-edit"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Edit Display Name</div>
+        <div class="settings-item-sub" id="acc-name-display">USERNAME</div>
+      </div>
+      <div class="settings-item-right"><i class="fa fa-chevron-right" style="color:var(--grey);font-size:12px"></i></div>
+    </div>
+
+    <div class="settings-item" onclick="showToast('Change avatar coming soon','fa-camera')">
+      <div class="settings-item-icon si-red"><i class="fa fa-camera"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Change Avatar</div>
+        <div class="settings-item-sub">Update profile picture</div>
+      </div>
+      <div class="settings-item-right"><i class="fa fa-chevron-right" style="color:var(--grey);font-size:12px"></i></div>
+    </div>
+
+    <div class="settings-section-label">Security</div>
+
+    <div class="settings-item" onclick="showToast('Email change link sent','fa-envelope')">
+      <div class="settings-item-icon si-blue"><i class="fa fa-envelope"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Email Address</div>
+        <div class="settings-item-sub" id="acc-email-display">member@email.com</div>
+      </div>
+      <div class="settings-item-right"><i class="fa fa-chevron-right" style="color:var(--grey);font-size:12px"></i></div>
+    </div>
+
+    <div class="settings-item" onclick="showToast('Password reset link sent!','fa-lock')">
+      <div class="settings-item-icon si-grey"><i class="fa fa-lock"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Change Password</div>
+        <div class="settings-item-sub">Update your login password</div>
+      </div>
+      <div class="settings-item-right"><i class="fa fa-chevron-right" style="color:var(--grey);font-size:12px"></i></div>
+    </div>
+
+    <div class="settings-item" onclick="toggleSetting(this,'2fa')">
+      <div class="settings-item-icon si-green"><i class="fa fa-shield-alt"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Two-Factor Auth</div>
+        <div class="settings-item-sub">Extra security for your account</div>
+      </div>
+      <div class="settings-item-right"><div class="toggle-switch" id="toggle-2fa"></div></div>
+    </div>
+
+    <div class="settings-section-label">Subscription</div>
+
+    <div class="settings-item" onclick="showToast('Premium plan active!','fa-crown')">
+      <div class="settings-item-icon si-gold"><i class="fa fa-crown"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Premium Plan</div>
+        <div class="settings-item-sub">Renews Apr 15 · No ads</div>
+      </div>
+      <div class="settings-item-right"><span class="settings-value">Active</span></div>
+    </div>
+
+    <div class="settings-item" onclick="showToast('Billing history coming soon','fa-receipt')">
+      <div class="settings-item-icon si-grey"><i class="fa fa-receipt"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Billing & Payments</div>
+        <div class="settings-item-sub">Manage payment methods</div>
+      </div>
+      <div class="settings-item-right"><i class="fa fa-chevron-right" style="color:var(--grey);font-size:12px"></i></div>
+    </div>
+
+    <div class="settings-section-label">Danger Zone</div>
+
+    <div class="settings-item" onclick="showToast('All devices signed out','fa-sign-out-alt')">
+      <div class="settings-item-icon si-grey"><i class="fa fa-sign-out-alt"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label">Sign Out All Devices</div>
+        <div class="settings-item-sub">Log out everywhere</div>
+      </div>
+      <div class="settings-item-right"><i class="fa fa-chevron-right" style="color:var(--grey);font-size:12px"></i></div>
+    </div>
+
+    <div class="settings-item" onclick="showToast('Account deletion requested. Team will contact you.','fa-exclamation-triangle')">
+      <div class="settings-item-icon" style="background:rgba(255,46,99,0.1);color:var(--red)"><i class="fa fa-user-times"></i></div>
+      <div class="settings-item-text">
+        <div class="settings-item-label" style="color:var(--red)">Delete Account</div>
+        <div class="settings-item-sub">This action is irreversible</div>
+      </div>
+      <div class="settings-item-right"><i class="fa fa-chevron-right" style="color:var(--red);font-size:12px"></i></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ MEDIA PLAYER SCREEN ═══════════════════════════════ -->
+<div class="screen" id="screen-player">
+  <div class="player-top">
+    <div class="player-back-btn" onclick="closePlayer()"><i class="fa fa-arrow-left"></i></div>
+    <div class="player-title-info">
+      <h3 id="player-movie-title">Movie Title</h3>
+      <span id="player-movie-meta">2024 · HD</span>
+    </div>
+    <div class="player-quality-badge" onclick="openQualityPicker()" id="player-quality-display">1080p</div>
+  </div>
+  <div class="player-video-wrap" id="player-video-wrap" onclick="togglePlayerControls()">
+    <video id="player-video" playsinline></video>
+    <div class="player-no-video" id="player-no-video">
+      <i class="fa fa-film"></i>
+      <h3>Select a Video File</h3>
+      <p>This movie streams from your device or from the web. Tap below to open a local file.</p>
+      <label class="player-file-btn" for="player-file-input">
+        <i class="fa fa-folder-open"></i> OPEN FILE FROM DEVICE
+      </label>
+      <input type="file" id="player-file-input" accept="video/*" style="display:none" onchange="loadLocalFile(event)">
+    </div>
+    <div class="player-center-controls" id="player-center-controls">
+      <div class="player-ctrl-btn" onclick="skipVideo(-10, event)"><i class="fa fa-backward"></i></div>
+      <div class="player-ctrl-btn main" id="player-play-pause-btn" onclick="togglePlayPause(event)"><i class="fa fa-play" id="play-pause-icon"></i></div>
+      <div class="player-ctrl-btn" onclick="skipVideo(10, event)"><i class="fa fa-forward"></i></div>
+    </div>
+    <div class="player-bar" id="player-bar">
+      <div class="player-seek-wrap" onclick="seekVideo(event)">
+        <div class="player-seek-bg">
+          <div class="player-seek-fill" id="player-seek-fill" style="width:0%">
+            <div class="player-seek-thumb"></div>
+          </div>
+        </div>
+      </div>
+      <div class="player-time-row">
+        <span class="player-time" id="player-current-time">0:00</span>
+        <span class="player-time" id="player-duration-time">0:00</span>
+      </div>
+      <div class="player-bottom-btns">
+        <button class="player-bottom-btn" onclick="toggleMute(event)"><i class="fa fa-volume-up" id="mute-icon"></i></button>
+        <div class="player-volume">
+          <input type="range" class="player-volume-slider" id="volume-slider" min="0" max="1" step="0.05" value="1" oninput="setVolume(this.value)">
+        </div>
+        <button class="player-bottom-btn" onclick="openQualityPicker(event)"><i class="fa fa-sliders-h"></i></button>
+        <label class="player-bottom-btn" for="player-file-input" onclick="event.stopPropagation()" title="Open file"><i class="fa fa-folder-open"></i></label>
+        <button class="player-bottom-btn" onclick="toggleFullscreen(event)"><i class="fa fa-expand" id="fullscreen-icon"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ MESSAGES SCREEN ═══════════════════════════════ -->
+<div class="screen" id="screen-messages">
+  <div class="messages-layout" id="messages-layout">
+    <div class="messages-header">
+      <button class="messages-back" onclick="showScreen('profile')"><i class="fa fa-arrow-left"></i></button>
+      <div style="flex:1">
+        <div style="font-family:Bebas Neue;font-size:24px;letter-spacing:2px">MESSAGES</div>
+        <div style="font-family:Rajdhani;font-size:11px;color:var(--grey);letter-spacing:1px">MOVIE MAX CHAT</div>
+      </div>
+      <div style="cursor:pointer;color:var(--blue);font-size:18px" onclick="showToast('New message coming soon','fa-pen')"><i class="fa fa-pen"></i></div>
+    </div>
+    <div class="msg-contacts" id="msg-contacts-list"></div>
+  </div>
+  <!-- Chat View -->
+  <div id="chat-view" style="display:none;flex-direction:column;height:100vh;padding-top:0;">
+    <div class="messages-header">
+      <button class="messages-back" onclick="closeChatView()"><i class="fa fa-arrow-left"></i></button>
+      <div class="msg-chat-avatar" id="chat-contact-avatar">MM</div>
+      <div class="msg-chat-info">
+        <h4 id="chat-contact-name">Movie Max</h4>
+        <span id="chat-contact-status">● Online</span>
+      </div>
+      <div style="cursor:pointer;color:var(--grey);font-size:18px;margin-left:auto" onclick="showToast('Video call coming soon','fa-video')"><i class="fa fa-video"></i></div>
+    </div>
+    <div class="msg-list" id="msg-list"></div>
+    <div class="msg-input-bar" style="position:static;border-top:1px solid rgba(255,255,255,0.07)">
+      <input type="text" class="msg-input" id="msg-input-field" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendMessage()">
+      <button class="msg-send-btn" onclick="sendMessage()"><i class="fa fa-paper-plane"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ COMMUNITY SCREEN ═══════════════════════════════ -->
+<div class="screen" id="screen-community">
+  <div class="community-content">
+    <div style="padding:96px 24px 0;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-family:Bebas Neue;font-size:32px;letter-spacing:2px">Community</div>
+        <div style="font-family:Rajdhani;font-size:11px;color:var(--grey);letter-spacing:2px">MOVIE LOVERS UNITE</div>
+      </div>
+      <button class="messages-back" onclick="showScreen('profile')" style="width:40px;height:40px"><i class="fa fa-arrow-left"></i></button>
+    </div>
+    <div class="community-tabs">
+      <div class="comm-tab active" onclick="switchCommTab(this,'feed')">Feed</div>
+      <div class="comm-tab" onclick="switchCommTab(this,'reviews')">Reviews</div>
+      <div class="comm-tab" onclick="switchCommTab(this,'watchlist')">Watchlists</div>
+    </div>
+    <div class="compose-post-area">
+      <textarea class="compose-post-input" id="compose-input" placeholder="Share your movie thoughts, reviews, or recommendations…" maxlength="280" oninput="document.getElementById('compose-char').textContent=this.value.length+'/280'"></textarea>
+      <div class="compose-post-footer">
+        <span class="compose-char-count" id="compose-char">0/280</span>
+        <button class="compose-submit-btn" onclick="submitPost()"><i class="fa fa-paper-plane"></i> POST</button>
+      </div>
+    </div>
+    <div id="community-posts"></div>
+  </div>
+</div>
+
+<!-- ─── QUALITY PICKER MODAL ─── -->
+<div class="quality-modal-overlay" id="quality-modal-overlay" onclick="closeQualityPicker()">
+  <div class="quality-modal" onclick="event.stopPropagation()">
+    <h3><i class="fa fa-film"></i> Video Quality</h3>
+    <div id="quality-options-list"></div>
+    <button style="width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:var(--grey);font-family:Rajdhani;font-size:14px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:8px" onclick="closeQualityPicker()">CANCEL</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ BOTTOM NAV ═══════════════════════════════ -->
+<nav class="bottom-nav" id="bottomnav" style="display:none">
+  <div class="nav-item active" id="nav-home" onclick="showScreen('home')">
+    <i class="fa fa-home"></i>
+    <span>Home</span>
+  </div>
+  <div class="nav-item" id="nav-search" onclick="showScreen('search')">
+    <i class="fa fa-search"></i>
+    <span>Search</span>
+  </div>
+  <div class="nav-item" id="nav-community" onclick="showScreen('community')">
+    <i class="fa fa-users"></i>
+    <span>Community</span>
+  </div>
+  <div class="nav-item" id="nav-downloads" onclick="showScreen('downloads')">
+    <i class="fa fa-download"></i>
+    <span>Downloads</span>
+  </div>
+  <div class="nav-item" id="nav-profile" onclick="showScreen('profile')">
+    <i class="fa fa-user"></i>
+    <span>Me</span>
+  </div>
+</nav>
+
+<script>
+// ─── EXPANDED MOVIES DATA ───
+const MOVIES = [
+  { id:0, title:"Dune: Part Two", year:2024, rating:8.5, duration:"2h 46m", genre:"Sci-Fi",
+    desc:"Paul Atreides unites with the Fremen while on a warpath of revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the known universe.",
+    poster:"https://m.media-amazon.com/images/M/MV5BODI0YjNhNjUtYjM0My00MTUwLWFlYTMtMWI2NGUzYjNjNGIyXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_SX300.jpg",
+    bg:"https://m.media-amazon.com/images/M/MV5BMDBmYTZjNjUtN2M1MS00MTQ2LTk2ODgtNzc2M2QyZGE5NTVjXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_.jpg",
+    cast:["T.C","Z.S","R.C","J.M","A.J"], archiveId:null, size:"4.2 GB" },
+  { id:1, title:"Oppenheimer", year:2023, rating:8.9, duration:"3h 0m", genre:"Drama",
+    desc:"The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb during World War II.",
+    poster:"https://m.media-amazon.com/images/M/MV5BMDBmYTZjNjUtN2M1MS00MTQ2LTk2ODgtNzc2M2QyZGE5NTVjXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_SX300.jpg",
+    bg:"https://m.media-amazon.com/images/M/MV5BMDBmYTZjNjUtN2M1MS00MTQ2LTk2ODgtNzc2M2QyZGE5NTVjXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_.jpg",
+    cast:["C.M","E.B","M.R","R.D","F.M"], archiveId:null, size:"5.1 GB" },
+  { id:2, title:"John Wick 4", year:2023, rating:7.7, duration:"2h 49m", genre:"Action",
+    desc:"John Wick uncovers a path to defeating the High Table. But before he can earn his freedom, Wick must face off against a new enemy with powerful alliances across the globe.",
+    poster:"https://m.media-amazon.com/images/M/MV5BMDExZGMyOTMtMDgyYi00NGIwLWJhMTEtOTdkZGFjNzQ1MTEyXkEyXkFqcGdeQXVyMjM4NTM5NDY@._V1_SX300.jpg",
+    bg:"", cast:["K.R","D.P","B.N","I.M","C.C"], archiveId:null, size:"3.8 GB" },
+  { id:3, title:"Guardians Vol. 3", year:2023, rating:7.9, duration:"2h 30m", genre:"Action",
+    desc:"Still reeling from the loss of Gamora, Peter Quill rallies his team to defend the universe and one of their own.",
+    poster:"https://m.media-amazon.com/images/M/MV5BMDllNTIyNjUtZTMwYi00NGMwLWJlNDQtZTdlNWUwNzg1ZjliXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg",
+    bg:"", cast:["C.P","Z.S","D.B","B.D","P.S"], archiveId:null, size:"3.5 GB" },
+  { id:4, title:"The Dark Knight", year:2008, rating:9.0, duration:"2h 32m", genre:"Action",
+    desc:"When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests.",
+    poster:"https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg",
+    bg:"", cast:["C.B","H.L","A.E","M.G","G.O"], archiveId:"the-dark-knight-2008", size:"2.8 GB" },
+  { id:5, title:"Inception", year:2010, rating:8.8, duration:"2h 28m", genre:"Sci-Fi",
+    desc:"A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
+    poster:"https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
+    bg:"", cast:["L.D","J.G","E.P","T.H","C.C"], archiveId:"inception-2010", size:"2.5 GB" },
+  { id:6, title:"Interstellar", year:2014, rating:8.7, duration:"2h 49m", genre:"Sci-Fi",
+    desc:"A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
+    poster:"https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg",
+    bg:"", cast:["M.M","A.H","J.C","M.C","W.B"], archiveId:"Interstellar_2014", size:"3.9 GB" },
+  { id:7, title:"Mad Max: Fury Road", year:2015, rating:8.1, duration:"2h 0m", genre:"Action",
+    desc:"In a post-apocalyptic wasteland, a woman rebels against a tyrannical ruler in search for her homeland.",
+    poster:"https://m.media-amazon.com/images/M/MV5BN2EwM2I5OWMtMGQyMi00Zjg1LWJkNTctZTdjYTA4OGUwZjMyXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg",
+    bg:"", cast:["T.H","C.T","N.H","H.K","Z.E"], archiveId:null, size:"2.2 GB" },
+  { id:8, title:"The Matrix", year:1999, rating:8.7, duration:"2h 16m", genre:"Sci-Fi",
+    desc:"A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
+    poster:"https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVlLTM5YTUtZWU2OGYxNGViZXVhXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
+    bg:"", cast:["K.R","L.F","C.W","H.W","J.P"], archiveId:"TheMatrix", size:"1.9 GB" },
+  { id:9, title:"Everything Everywhere", year:2022, rating:7.8, duration:"2h 19m", genre:"Sci-Fi",
+    desc:"A middle-aged Chinese immigrant is swept up in an insane adventure in which she alone can save existence by exploring other universes.",
+    poster:"https://m.media-amazon.com/images/M/MV5BYTdiOTIyZTQtNmQ1OS00NjZlLWIyMTgtYzk5Y2M3ZDVmMDk1XkEyXkFqcGdeQXVyMTAyMjQ3NzQ1._V1_SX300.jpg",
+    bg:"", cast:["M.K","S.H","K.H","J.C","S.Q"], archiveId:null, size:"2.1 GB" },
+  { id:10, title:"Top Gun: Maverick", year:2022, rating:8.2, duration:"2h 10m", genre:"Action",
+    desc:"After thirty years, Maverick is still pushing the envelope as a top naval aviator, but must confront ghosts of his past when he leads TOP GUN's elite graduates on a specialized mission.",
+    poster:"https://m.media-amazon.com/images/M/MV5BOWZlMjhhZTYtOTEzNS00ZTQ1LWIyMmEtZWFmZTdlNmQ5OWU3XkEyXkFqcGdeQXVyMjkwOTAyMDU@._V1_SX300.jpg",
+    bg:"", cast:["T.C","M.T","J.H","G.E","V.K"], archiveId:null, size:"3.1 GB" },
+  { id:11, title:"Parasite", year:2019, rating:8.5, duration:"2h 12m", genre:"Thriller",
+    desc:"Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.",
+    poster:"https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg",
+    bg:"", cast:["S.I","L.S","C.W","P.S","J.H"], archiveId:null, size:"1.8 GB" },
+  { id:12, title:"The Notebook", year:2004, rating:7.9, duration:"2h 3m", genre:"Love Story",
+    desc:"A poor yet passionate young man falls in love with a rich girl, giving her a sense of freedom, but they are soon separated by her parents and by a war.",
+    poster:"https://m.media-amazon.com/images/M/MV5BOWMxMjU1ZDctOThhZC00ZTQ0LTg4ZTktOGE2MzkzZjE5NzUzXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg",
+    bg:"", cast:["R.G","R.M","J.G","S.E","K.C"], archiveId:null, size:"1.7 GB" },
+  { id:13, title:"To All The Boys", year:2018, rating:7.1, duration:"1h 39m", genre:"High School",
+    desc:"A teenage girl's secret love letters are exposed and she must navigate the chaos they cause.",
+    poster:"https://m.media-amazon.com/images/M/MV5BNzdhMTYxOWMtNDJjMC00ZjY4LTg4YjctZDE0NTg5MTU3ZTQ4XkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg",
+    bg:"", cast:["L.C","N.C","J.K","J.B","A.K"], archiveId:null, size:"1.5 GB" },
+  { id:14, title:"Spirited Away", year:2001, rating:8.6, duration:"2h 5m", genre:"Anime",
+    desc:"A sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, and her parents have been turned into pigs.",
+    poster:"https://m.media-amazon.com/images/M/MV5BMjlmZmI5MDctNDE2YS00YWE0LWE5ZWItZDBhYWQ0NTcxNWRhXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg",
+    bg:"", cast:["D.H","S.Y","M.A","Y.N","T.S"], archiveId:null, size:"2.0 GB" },
+  { id:15, title:"The Princess Diaries", year:2001, rating:6.9, duration:"1h 55m", genre:"High School",
+    desc:"Mia Thermopolis has just found out that her father is the prince of Genovia, which means she is the princess, and must choose whether to accept her royal role.",
+    poster:"https://m.media-amazon.com/images/M/MV5BMzE0YTIxNzktNzY1MC00ZjViLWExOWItZjRhNTRmMmVlZjVhXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg",
+    bg:"", cast:["A.H","J.A","H.M","R.B","M.S"], archiveId:null, size:"1.6 GB" },
+  { id:16, title:"Indiana Jones", year:1981, rating:8.4, duration:"1h 55m", genre:"Adventure",
+    desc:"Archaeologist and adventurer Indiana Jones is hired by the U.S. government to find the Ark of the Covenant before the Nazis can obtain its awesome powers.",
+    poster:"https://m.media-amazon.com/images/M/MV5BMjA0ODEzMTc1Nl5BMl5BanBnXkFtZTcwODM2MjAxNA@@._V1_SX300.jpg",
+    bg:"", cast:["H.F","K.A","P.F","J.R","R.L"], archiveId:null, size:"2.3 GB" },
+  { id:17, title:"Superbad", year:2007, rating:7.6, duration:"1h 53m", genre:"Comedy",
+    desc:"Two co-dependent high school seniors are forced to deal with separation anxiety after their plan to get drunk together before graduation fails.",
+    poster:"https://m.media-amazon.com/images/M/MV5BMTc0NjIyMjA2OF5BMl5BanBnXkFtZTcwMDMxNDE1MQ@@._V1_SX300.jpg",
+    bg:"", cast:["J.H","M.C","C.M","E.M","B.H"], archiveId:null, size:"1.7 GB" },
+  { id:18, title:"Squid Game", year:2021, rating:8.0, duration:"Season 1", genre:"Series",
+    desc:"Hundreds of cash-strapped players accept a strange invitation to compete in children's games. Inside, a tempting prize awaits — with deadly consequences.",
+    poster:"https://m.media-amazon.com/images/M/MV5BYWY2ZGFhMGItYzA5Yi00Y2NmLWFiMjUtMDgzZDU5OWVlMDYwXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg",
+    bg:"", cast:["L.J","P.H","W.H","J.S","H.J"], archiveId:null, size:"8.5 GB" },
+  { id:19, title:"Crash Landing on You", year:2019, rating:8.7, duration:"Season 1", genre:"K-Drama",
+    desc:"A South Korean heiress crashes into North Korea and falls in love with a North Korean soldier who helps her hide and gets into all kinds of trouble.",
+    poster:"https://m.media-amazon.com/images/M/MV5BOGE3MGZmZGYtZjhlZS00N2Q3LTg2MTMtOTFjNmJjMWJjNzNjXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg",
+    bg:"", cast:["H.B","K.J","S.J","Y.S","K.S"], archiveId:null, size:"12 GB" }
+];
+
+const UPCOMING = [
+  { title:"Beef", date:"Apr 16", booked:"6,153", poster:"https://m.media-amazon.com/images/M/MV5BMjg1MTI5NjI5NV5BMl5BanBnXkFtZTgwMzMwODE3MDI@._V1_SX300.jpg" },
+  { title:"Roommates", date:"Apr 16", booked:"16,434", poster:"https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVlLTM5YTUtZWU2OGYxNGViZXVhXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg" },
+  { title:"Absolute Valor", date:"Apr 17", booked:"5,463", poster:"https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg" },
+  { title:"180", date:"Apr 17", booked:"10,848", poster:"https://m.media-amazon.com/images/M/MV5BMDllNTIyNjUtZTMwYi00NGMwLWJlNDQtZTdlNWUwNzg1ZjliXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg" },
+  { title:"Ironheart", date:"Jun 24", booked:"32,100", poster:"https://m.media-amazon.com/images/M/MV5BMDBmYTZjNjUtN2M1MS00MTQ2LTk2ODgtNzc2M2QyZGE5NTVjXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_SX300.jpg" },
+];
+
+// ─── COMMUNITY DATA ───
+let communityPosts = [
+  { id:1, user:"CinemaFan92", initials:"CF", color:"#FF2E63", badge:"top", time:"2m ago",
+    text:"Just finished Oppenheimer for the third time. Still gives me chills! The practical effects are just unmatched. What do you all think is Nolan's best film?",
+    movie:1, likes:142, comments:38, liked:false },
+  { id:2, user:"MovieMax_Mod", initials:"MM", color:"#08D9D6", badge:"mod", time:"15m ago",
+    text:"🎬 Weekly Watch Thread: This week's community pick is Parasite. Drop your ratings and reviews below! We'll feature the best review on our homepage.",
+    movie:11, likes:89, comments:67, liked:false },
+  { id:3, user:"AnimeQueen", initials:"AQ", color:"#9b59b6", badge:null, time:"1h ago",
+    text:"Spirited Away is genuinely one of the greatest animated films ever made. The world-building, the atmosphere... It aged like fine wine. 10/10 would recommend to anyone.",
+    movie:14, likes:204, comments:52, liked:true },
+  { id:4, user:"ActionJunkie", initials:"AJ", color:"#e67e22", badge:null, time:"3h ago",
+    text:"Mad Max: Fury Road is the greatest action movie ever made. Prove me wrong. 2 hours of pure adrenaline with practically zero CGI.",
+    movie:7, likes:317, comments:124, liked:false },
+  { id:5, user:"RomanceReader", initials:"RR", color:"#FF6B9D", badge:null, time:"5h ago",
+    text:"Can we talk about how The Notebook STILL makes me cry even after watching it 6 times? Ryan Gosling and Rachel McAdams had insane chemistry.",
+    movie:12, likes:88, comments:41, liked:false },
+];
+
+// ─── MESSAGES DATA ───
+const MSG_CONTACTS = [
+  { id:1, name:"Movie Max Team", initials:"MM", color:"linear-gradient(135deg,#FF2E63,#08D9D6)", status:"Online",
+    preview:"Welcome to Movie Max! 🎬", time:"Just now", unread:true,
+    messages:[
+      { sender:"them", name:"Movie Max", text:"Welcome to Movie Max! 🎬 Your cinematic journey starts here.", time:"Just now" },
+      { sender:"them", name:"Movie Max", text:"You can discover trending movies, download them, and connect with the community. Enjoy!", time:"Just now" },
+    ]},
+  { id:2, name:"CinemaFan92", initials:"CF", color:"linear-gradient(135deg,#FF2E63,#c5003f)", status:"Online",
+    preview:"Have you watched Oppenheimer yet?", time:"5m ago", unread:true,
+    messages:[
+      { sender:"them", name:"CinemaFan92", text:"Hey! Have you watched Oppenheimer yet?", time:"5m ago" },
+      { sender:"them", name:"CinemaFan92", text:"It's absolutely mind-blowing. Cillian Murphy deserved every award 🎬", time:"4m ago" },
+    ]},
+  { id:3, name:"AnimeQueen", initials:"AQ", color:"linear-gradient(135deg,#9b59b6,#8e44ad)", status:"2h ago",
+    preview:"Spirited Away is on Movie Max now!", time:"2h ago", unread:false,
+    messages:[
+      { sender:"them", name:"AnimeQueen", text:"Spirited Away is on Movie Max now! Go watch it 🌸", time:"2h ago" },
+    ]},
+  { id:4, name:"ActionJunkie", initials:"AJ", color:"linear-gradient(135deg,#e67e22,#d35400)", status:"Yesterday",
+    preview:"Top Gun was incredible!!!", time:"Yesterday", unread:false,
+    messages:[
+      { sender:"them", name:"ActionJunkie", text:"Top Gun Maverick was INCREDIBLE!!!! 🔥", time:"Yesterday" },
+    ]},
+];
+
+// ─── STATE ───
+let downloads = [];
+let currentDetailId = 0;
+let prevScreen = 'home';
+let currentFilter = 'All';
+let currentUser = null;
+let currentQuality = '1080p HD';
+let currentChatContact = null;
+let heroMovies = [0, 2, 10, 5, 6]; // Movie IDs to cycle in hero
+let currentHeroIdx = 0;
+let heroInterval = null;
+
+// ─── SIGNUP EFFECTS ───
+window.onload = () => {
+  buildFilmstrip();
+  buildParticles();
+};
+
+function buildFilmstrip() {
+  const fs = document.getElementById('filmstrip');
+  for (let i = 0; i < 8; i++) {
+    const col = document.createElement('div');
+    col.className = 'filmstrip-col';
+    for (let j = 0; j < 12; j++) {
+      const frame = document.createElement('div');
+      frame.className = 'filmstrip-frame';
+      col.appendChild(frame);
+    }
+    fs.appendChild(col);
+  }
+}
+
+function buildParticles() {
+  const container = document.getElementById('signup-particles');
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'signup-particle';
+    p.style.cssText = `left:${Math.random()*100}%;bottom:-10px;width:${Math.random()*3+1}px;height:${Math.random()*3+1}px;background:${Math.random()>0.5?'var(--red)':'var(--blue)'};animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*8}s;opacity:${0.3+Math.random()*0.6};`;
+    container.appendChild(p);
+  }
+}
+
+// ─── AUTH ───
+function switchAuthTab(tab) {
+  document.querySelectorAll('.signup-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('form-signup').style.display = tab === 'signup' ? 'flex' : 'none';
+  document.getElementById('form-login').style.display = tab === 'login' ? 'flex' : 'none';
+}
+
+function handleSignup() {
+  const name = document.getElementById('su-name').value.trim();
+  const email = document.getElementById('su-email').value.trim();
+  const pass = document.getElementById('su-pass').value;
+  const pass2 = document.getElementById('su-pass2').value;
+  if (!name) { showToast('Please enter your name','fa-exclamation-circle'); return; }
+  if (!email || !email.includes('@')) { showToast('Enter a valid email','fa-exclamation-circle'); return; }
+  if (pass.length < 6) { showToast('Password must be 6+ characters','fa-lock'); return; }
+  if (pass !== pass2) { showToast('Passwords do not match','fa-exclamation-circle'); return; }
+  loginUser(name, email);
+}
+
+function handleLogin() {
+  const email = document.getElementById('li-email').value.trim();
+  const pass = document.getElementById('li-pass').value;
+  if (!email || !email.includes('@')) { showToast('Enter a valid email','fa-exclamation-circle'); return; }
+  if (!pass) { showToast('Enter your password','fa-lock'); return; }
+  loginUser(email.split('@')[0], email);
+}
+
+function socialAuth(provider) {
+  loginUser(provider + ' User', provider.toLowerCase()+'@auth.com');
+}
+
+function loginUser(name, email) {
+  currentUser = { name, email };
+  const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('avatar-initials').textContent = initials;
+  document.getElementById('profile-name-display').textContent = name;
+  document.getElementById('profile-email-display').textContent = email;
+  document.getElementById('profile-id-display').textContent = Math.floor(10000000+Math.random()*90000000);
+  document.getElementById('profile-avatar-letter').textContent = initials;
+  document.getElementById('topnav').style.display = 'flex';
+  document.getElementById('bottomnav').style.display = 'flex';
+  document.getElementById('screen-signup').style.display = 'none';
+  showScreen('home');
+  buildRows();
+  buildSearchGrid(MOVIES);
+  buildWatchHistory();
+  buildMsgContacts();
+  buildCommunityPosts();
+  startHeroRotation();
+  showToast(`Welcome, ${name.split(' ')[0]}! 🎬`, 'fa-film');
+}
+
+function handleLogout() {
+  currentUser = null;
+  downloads = [];
+  stopHeroRotation();
+  document.getElementById('topnav').style.display = 'none';
+  document.getElementById('bottomnav').style.display = 'none';
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-signup').style.display = 'flex';
+  document.getElementById('screen-signup').classList.add('active');
+  showToast('Logged out successfully','fa-sign-out-alt');
+}
+
+// ─── HERO ROTATION ───
+function startHeroRotation() {
+  updateHero(0);
+  buildHeroDots();
+  heroInterval = setInterval(() => {
+    currentHeroIdx = (currentHeroIdx + 1) % heroMovies.length;
+    updateHero(currentHeroIdx);
+  }, 6000);
+}
+
+function stopHeroRotation() {
+  if (heroInterval) { clearInterval(heroInterval); heroInterval = null; }
+}
+
+function updateHero(idx) {
+  currentHeroIdx = idx;
+  const m = MOVIES[heroMovies[idx]];
+  if (!m) return;
+  const poster = document.getElementById('hero-poster');
+  if (poster) poster.style.backgroundImage = `url('${m.bg || m.poster}')`;
+  const titleEl = document.getElementById('hero-title');
+  if (titleEl) {
+    const parts = m.title.split(':');
+    titleEl.innerHTML = parts.length > 1 ? `${parts[0]}:<em>${parts.slice(1).join(':')}</em>` : m.title;
+  }
+  const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setEl('hero-rating', m.rating);
+  setEl('hero-year', m.year);
+  setEl('hero-duration', m.duration);
+  setEl('hero-genre', m.genre);
+  setEl('hero-desc', m.desc);
+  // Update dot states
+  document.querySelectorAll('.hero-dot').forEach((d, i) => {
+    d.style.background = i === idx ? 'var(--red)' : 'rgba(255,255,255,0.3)';
+    d.style.width = i === idx ? '20px' : '6px';
+  });
+}
+
+function buildHeroDots() {
+  const wrap = document.getElementById('hero-dots');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  heroMovies.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'hero-dot';
+    dot.style.cssText = `height:6px;border-radius:4px;cursor:pointer;transition:all 0.3s;background:${i===0?'var(--red)':'rgba(255,255,255,0.3)'};width:${i===0?'20px':'6px'}`;
+    dot.onclick = (e) => { e.stopPropagation(); stopHeroRotation(); updateHero(i); heroInterval = setInterval(()=>{currentHeroIdx=(currentHeroIdx+1)%heroMovies.length;updateHero(currentHeroIdx);},6000); };
+    wrap.appendChild(dot);
+  });
+}
+
+// ─── ROWS ───
+function buildRows() {
+  const trendingIds = [0, 2, 3, 10, 7, 5, 18, 19];
+  const topRated = [4, 5, 6, 8, 11, 9, 14];
+  const action = [2, 3, 4, 7, 10, 16];
+  const newRel = [0, 1, 9, 10, 18];
+  const top10 = [4, 5, 0, 6, 8, 2, 11, 1, 9, 7];
+  const series = [18, 19, 3, 9];
+  const loveStory = [12, 13, 15, 19];
+  const adventure = [16, 3, 7, 10, 2];
+
+  buildTrendingSlider(trendingIds.map(i => MOVIES[i]));
+  renderTop10Cards('row-top10', top10.map(i => MOVIES[i]));
+  renderCards('row-toprated', topRated.map(i => MOVIES[i]));
+  renderCards('row-action', action.map(i => MOVIES[i]));
+  renderWideCards('row-new', newRel.map(i => MOVIES[i]));
+  renderUpcomingCards('row-upcoming');
+  renderCards('row-foryou', [0,5,4,8,11].map(i=>MOVIES[i]));
+}
+
+// ─── TRENDING CINEMATIC SLIDER ───
+function buildTrendingSlider(movies) {
+  const slider = document.getElementById('trending-slider');
+  if (!slider) return;
+  slider.innerHTML = '';
+  movies.forEach((m, i) => {
+    const card = document.createElement('div');
+    card.className = 'trending-poster-card';
+    card.innerHTML = `
+      <img src="${m.poster}" alt="${m.title}" onerror="this.src='https://via.placeholder.com/200x300/1A1A1A/FF2E63?text=${encodeURIComponent(m.title)}'">
+      <div class="trending-poster-overlay"></div>
+      <div class="trending-play-btn"><i class="fa fa-play"></i></div>
+      <div class="trending-poster-content">
+        <div class="trending-poster-rank">TRENDING #${i+1}</div>
+        <div class="trending-poster-title">${m.title}</div>
+        <div class="trending-poster-meta">
+          <span class="star">★</span> ${m.rating} · ${m.year} · ${m.genre}
+        </div>
+      </div>
+    `;
+    card.onclick = () => openDetail(m.id);
+    slider.appendChild(card);
+  });
+}
+
+function renderCards(rowId, movies) {
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  row.innerHTML = '';
+  movies.forEach((m, idx) => {
+    const card = document.createElement('div');
+    card.className = 'movie-card';
+    card.style.animationDelay = `${idx * 0.06}s`;
+    card.onclick = () => openDetail(m.id);
+    card.innerHTML = `
+      <img class="movie-card-img" src="${m.poster}" alt="${m.title}"
+           onerror="this.src='https://via.placeholder.com/160x240/1A1A1A/FF2E63?text=${encodeURIComponent(m.title)}'">
+      <div class="rating-badge"><i class="fa fa-star"></i> ${m.rating}</div>
+      <div class="movie-card-overlay">
+        <div class="card-play"><i class="fa fa-play"></i></div>
+        <div class="card-title-hover">${m.title}</div>
+      </div>
+      <div class="card-info">
+        <div class="card-name">${m.title}</div>
+        <div class="card-year">${m.year} · ${m.genre}</div>
+      </div>
+    `;
+    row.appendChild(card);
+  });
+}
+
+function renderTop10Cards(rowId, movies) {
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  row.innerHTML = '';
+  movies.slice(0,10).forEach((m, idx) => {
+    const card = document.createElement('div');
+    card.className = 'top10-card';
+    card.onclick = () => openDetail(m.id);
+    card.innerHTML = `
+      <img src="${m.poster}" alt="${m.title}" onerror="this.src='https://via.placeholder.com/130x195/1A1A1A/FF2E63?text=${encodeURIComponent(m.title)}'">
+      <div class="top10-num">${idx+1}</div>
+      <div class="top10-card-info">
+        <div class="top10-card-name">${m.title}</div>
+      </div>
+    `;
+    row.appendChild(card);
+  });
+}
+
+function renderUpcomingCards(rowId) {
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  row.innerHTML = '';
+  UPCOMING.forEach((u) => {
+    const card = document.createElement('div');
+    card.className = 'upcoming-card';
+    card.onclick = () => showToast(`${u.title} coming ${u.date}!`, 'fa-calendar');
+    card.innerHTML = `
+      <img class="upcoming-card-img" src="${u.poster}" alt="${u.title}"
+           onerror="this.src='https://via.placeholder.com/160x100/1A1A1A/08D9D6?text=${encodeURIComponent(u.title)}'">
+      <div class="upcoming-date-badge">${u.date}</div>
+      <div class="upcoming-booked"></div>
+      <div class="upcoming-card-info">
+        <div class="upcoming-card-title">${u.title}</div>
+        <div class="upcoming-card-booked">🔴 ${u.booked} booked</div>
+      </div>
+    `;
+    row.appendChild(card);
+  });
+}
+
+function renderWideCards(rowId, movies) {
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  row.innerHTML = '';
+  movies.forEach((m, idx) => {
+    const card = document.createElement('div');
+    card.className = 'wide-card';
+    card.style.animationDelay = `${idx * 0.08}s`;
+    card.onclick = () => openDetail(m.id);
+    const isNew = (2024 - m.year) <= 1;
+    card.innerHTML = `
+      <img class="wide-card-img" src="${m.poster}" alt="${m.title}"
+           onerror="this.src='https://via.placeholder.com/280x160/1A1A1A/08D9D6?text=${encodeURIComponent(m.title)}'">
+      <div class="wide-card-content">
+        <div class="wide-card-title">${m.title}</div>
+        <div class="wide-card-sub">${m.year} · ${m.duration} · <span style="color:#FFD700">★ ${m.rating}</span></div>
+        <span class="wide-card-badge ${isNew ? 'badge-red' : 'badge-blue'}">${isNew ? '🔥 NEW' : m.genre.toUpperCase()}</span>
+      </div>
+    `;
+    row.appendChild(card);
+  });
+}
+
+function buildWatchHistory() {
+  const row = document.getElementById('watch-history-row');
+  if (!row) return;
+  const history = [1, 9, 0, 10];
+  const progresses = [70, 45, 100, 22];
+  row.innerHTML = '';
+  history.forEach((id, i) => {
+    const m = MOVIES[id];
+    const div = document.createElement('div');
+    div.className = 'history-thumb';
+    div.onclick = () => openDetail(m.id);
+    div.innerHTML = `
+      <img src="${m.poster}" alt="${m.title}" onerror="this.src='https://via.placeholder.com/80x56/1A1A1A/FF2E63?text=${encodeURIComponent(m.title[0])}'">
+      <div class="history-bar"><div class="history-bar-fill" style="width:${progresses[i]}%"></div></div>
+      <div class="history-thumb-name">${m.title}</div>
+    `;
+    row.appendChild(div);
+  });
+}
+
+// ─── SEARCH ───
+function buildSearchGrid(movies) {
+  const grid = document.getElementById('search-grid');
+  const empty = document.getElementById('search-empty');
+  grid.innerHTML = '';
+  if (!movies.length) { grid.style.display='none'; empty.style.display='block'; return; }
+  grid.style.display='grid'; empty.style.display='none';
+  movies.forEach((m, i) => {
+    const card = document.createElement('div');
+    card.className = 'search-card';
+    card.style.animationDelay = `${i * 0.04}s`;
+    card.onclick = () => openDetail(m.id);
+    card.innerHTML = `
+      <img src="${m.poster}" alt="${m.title}"
+           onerror="this.src='https://via.placeholder.com/120x180/1A1A1A/FF2E63?text=${encodeURIComponent(m.title.split(' ')[0])}'">
+      <div class="search-card-info">
+        <div class="search-card-name">${m.title}</div>
+        <div class="search-rating">★ ${m.rating}</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function liveSearch(val) {
+  let filtered = MOVIES.filter(m =>
+    m.title.toLowerCase().includes(val.toLowerCase()) ||
+    m.genre.toLowerCase().includes(val.toLowerCase())
+  );
+  if (currentFilter !== 'All') filtered = filtered.filter(m => m.genre === currentFilter);
+  buildSearchGrid(filtered);
+}
+
+function filterCat(el, cat) {
+  document.querySelectorAll('.cat-tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  currentFilter = cat;
+  const val = document.getElementById('search-input').value;
+  liveSearch(val);
+}
+
+// ─── DETAIL ───
+function openDetail(id, e) {
+  if (e) e.stopPropagation();
+  currentDetailId = id;
+  const m = MOVIES[id];
+  if (!m) return;
+  document.getElementById('detail-bg').style.backgroundImage = `url('${m.bg || m.poster}')`;
+  document.getElementById('detail-poster').src = m.poster;
+  document.getElementById('detail-poster').onerror = function() {
+    this.src = `https://via.placeholder.com/120x180/1A1A1A/FF2E63?text=${encodeURIComponent(m.title)}`;
+  };
+  document.getElementById('detail-title').textContent = m.title;
+  document.getElementById('detail-rating').textContent = m.rating;
+  document.getElementById('detail-genre').textContent = m.genre;
+  document.getElementById('detail-info').textContent = `${m.year} · ${m.duration}`;
+  document.getElementById('detail-desc').textContent = m.desc;
+  const castRow = document.getElementById('cast-row');
+  castRow.innerHTML = '';
+  m.cast.forEach(c => {
+    castRow.innerHTML += `<div class="cast-item"><div class="cast-avatar">${c}</div><div class="cast-name">${c}</div></div>`;
+  });
+  const related = MOVIES.filter(mv => mv.id !== id && mv.genre === m.genre).slice(0, 5);
+  renderCards('related-row', related.length ? related : MOVIES.slice(0,4));
+  prevScreen = document.querySelector('.screen.active')?.id.replace('screen-','') || 'home';
+  showScreen('detail');
+}
+
+function goBack() { showScreen(prevScreen); }
+function downloadCurrent() { downloadMovie(currentDetailId); }
+
+// ─── DOWNLOADS ───
+function downloadMovie(id, e) {
+  if (e) e.stopPropagation();
+  const m = MOVIES[id];
+  const exists = downloads.find(d => d.id === id);
+  if (exists) { showToast(`${m.title} already downloaded!`, 'fa-check'); return; }
+  downloads.push({ ...m, progress: 100 });
+  renderDownloads();
+  showToast(`${m.title} added to downloads!`, 'fa-download');
+  updateProfileStats();
+}
+
+function renderDownloads() {
+  const list = document.getElementById('dl-list');
+  if (!downloads.length) {
+    list.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--grey)">
+      <i class="fa fa-download" style="font-size:40px;opacity:0.2;display:block;margin-bottom:16px"></i>
+      <p style="font-family:Rajdhani;font-size:16px;letter-spacing:1px">No downloads yet.<br>Find a movie and tap Download!</p></div>`;
+    return;
+  }
+  list.innerHTML = '';
+  const colors = ['var(--red)', 'var(--blue)', '#9b59b6', '#e67e22'];
+  downloads.forEach((m, i) => {
+    list.innerHTML += `
+      <div class="dl-item" onclick="openPlayer(${m.id})">
+        <img class="dl-thumb" src="${m.poster}" alt="${m.title}"
+             onerror="this.src='https://via.placeholder.com/64x90/1A1A1A/FF2E63?text=${encodeURIComponent(m.title.split(' ')[0])}'">
+        <div class="dl-info">
+          <div class="dl-title">${m.title}</div>
+          <div class="dl-meta">${m.year} · ${m.genre} · ${m.duration}</div>
+          <div class="dl-progress"><div class="dl-progress-fill" style="width:${m.progress}%;background:${colors[i%4]}"></div></div>
+        </div>
+        <div class="dl-actions">
+          <div class="dl-size">${m.size}</div>
+          <div class="dl-play"><i class="fa fa-play" style="font-size:12px;margin-left:2px"></i></div>
+        </div>
+      </div>`;
+  });
+}
+
+function updateProfileStats() {
+  document.getElementById('stat-dl').textContent = downloads.length;
+  document.getElementById('prof-dl-count').textContent = `${downloads.length} movie${downloads.length !== 1 ? 's' : ''}`;
+}
+
+// ─── SCREENS ───
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const sc = document.getElementById('screen-' + name);
+  if (sc) sc.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const nav = document.getElementById('nav-' + name);
+  if (nav) nav.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (name === 'downloads') renderDownloads();
+  if (name === 'search') {
+    buildSearchGrid(MOVIES);
+    document.getElementById('search-input').value = '';
+    currentFilter = 'All';
+    document.querySelectorAll('.cat-tag').forEach((t, i) => t.classList.toggle('active', i === 0));
+  }
+  if (name === 'messages') buildMsgContacts();
+  if (name === 'community') buildCommunityPosts();
+}
+
+// ─── MEDIA PLAYER ───
+function openPlayer(id, e) {
+  if (e) e.stopPropagation();
+  const m = MOVIES[id] || MOVIES[currentDetailId];
+  if (!m) return;
+  prevScreen = document.querySelector('.screen.active')?.id.replace('screen-','') || 'home';
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-player').classList.add('active');
+  document.getElementById('player-movie-title').textContent = m.title;
+  document.getElementById('player-movie-meta').textContent = `${m.year} · ${m.genre} · ${m.duration}`;
+  document.getElementById('player-quality-display').textContent = currentQuality.split(' ')[0];
+  const video = document.getElementById('player-video');
+  video.src = '';
+  document.getElementById('player-no-video').style.display = 'flex';
+  video.style.display = 'none';
+  document.getElementById('player-seek-fill').style.width = '0%';
+  document.getElementById('player-current-time').textContent = '0:00';
+  document.getElementById('player-duration-time').textContent = '0:00';
+  document.getElementById('play-pause-icon').className = 'fa fa-play';
+  showToast('Player opened — tap "Open File" to load a video', 'fa-play');
+}
+
+function closePlayer() {
+  const video = document.getElementById('player-video');
+  video.pause();
+  video.src = '';
+  showScreen(prevScreen || 'home');
+}
+
+function loadLocalFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const video = document.getElementById('player-video');
+  const noVid = document.getElementById('player-no-video');
+  const url = URL.createObjectURL(file);
+  video.src = url;
+  video.style.display = 'block';
+  noVid.style.display = 'none';
+  video.play();
+  document.getElementById('play-pause-icon').className = 'fa fa-pause';
+  showToast(`Playing: ${file.name}`, 'fa-play');
+  video.ontimeupdate = updatePlayerProgress;
+  video.onloadedmetadata = () => {
+    document.getElementById('player-duration-time').textContent = formatTime(video.duration);
+  };
+  video.onended = () => { document.getElementById('play-pause-icon').className = 'fa fa-play'; };
+}
+
+function updatePlayerProgress() {
+  const video = document.getElementById('player-video');
+  if (!video.duration) return;
+  const pct = (video.currentTime / video.duration) * 100;
+  document.getElementById('player-seek-fill').style.width = pct + '%';
+  document.getElementById('player-current-time').textContent = formatTime(video.currentTime);
+}
+
+function formatTime(secs) {
+  if (isNaN(secs)) return '0:00';
+  const m = Math.floor(secs / 60);
+  const s = Math.floor(secs % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function togglePlayPause(e) {
+  if (e) e.stopPropagation();
+  const video = document.getElementById('player-video');
+  if (!video.src) { showToast('No video loaded. Open a file first.', 'fa-folder-open'); return; }
+  if (video.paused) { video.play(); document.getElementById('play-pause-icon').className = 'fa fa-pause'; }
+  else { video.pause(); document.getElementById('play-pause-icon').className = 'fa fa-play'; }
+}
+
+function skipVideo(secs, e) {
+  if (e) e.stopPropagation();
+  const video = document.getElementById('player-video');
+  if (video.src) video.currentTime = Math.max(0, Math.min(video.duration || 0, video.currentTime + secs));
+}
+
+function seekVideo(event) {
+  const video = document.getElementById('player-video');
+  if (!video.duration) return;
+  const bar = event.currentTarget;
+  const rect = bar.getBoundingClientRect();
+  const pct = (event.clientX - rect.left) / rect.width;
+  video.currentTime = pct * video.duration;
+}
+
+let controlsTimeout;
+function togglePlayerControls() {
+  const wrap = document.getElementById('player-video-wrap');
+  wrap.classList.add('show-controls');
+  clearTimeout(controlsTimeout);
+  controlsTimeout = setTimeout(() => wrap.classList.remove('show-controls'), 3500);
+}
+
+function toggleMute(e) {
+  if (e) e.stopPropagation();
+  const video = document.getElementById('player-video');
+  video.muted = !video.muted;
+  document.getElementById('mute-icon').className = video.muted ? 'fa fa-volume-mute' : 'fa fa-volume-up';
+}
+
+function setVolume(val) {
+  const video = document.getElementById('player-video');
+  video.volume = val;
+  document.getElementById('mute-icon').className = val == 0 ? 'fa fa-volume-mute' : 'fa fa-volume-up';
+}
+
+function toggleFullscreen(e) {
+  if (e) e.stopPropagation();
+  const wrap = document.getElementById('player-video-wrap');
+  if (!document.fullscreenElement) {
+    wrap.requestFullscreen?.() || wrap.webkitRequestFullscreen?.();
+    document.getElementById('fullscreen-icon').className = 'fa fa-compress';
+  } else {
+    document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+    document.getElementById('fullscreen-icon').className = 'fa fa-expand';
+  }
+}
+
+// ─── QUALITY PICKER ───
+const qualityOptions = [
+  { label:'Auto (4K)', sub:'Best quality, uses more data', icon:'fa-crown', color:'si-gold' },
+  { label:'1080p HD', sub:'Full HD · Recommended', icon:'fa-film', color:'si-blue' },
+  { label:'720p HD', sub:'High quality · Less data', icon:'fa-play-circle', color:'si-red' },
+  { label:'480p SD', sub:'Standard · Save data', icon:'fa-sd-card', color:'si-grey' },
+  { label:'360p', sub:'Low quality · Minimal data', icon:'fa-wifi', color:'si-grey' },
+];
+
+function openQualityPicker(e) {
+  if (e) e.stopPropagation();
+  const list = document.getElementById('quality-options-list');
+  list.innerHTML = '';
+  qualityOptions.forEach(q => {
+    const div = document.createElement('div');
+    div.className = 'quality-option' + (currentQuality === q.label ? ' selected' : '');
+    div.onclick = () => { currentQuality = q.label; closeQualityPicker(); document.getElementById('quality-val').textContent = q.label; const d = document.getElementById('player-quality-display'); if(d) d.textContent = q.label.split(' ')[0]; showToast('Quality: ' + q.label, 'fa-film'); };
+    div.innerHTML = `
+      <div class="quality-option-icon ${q.color}"><i class="fa ${q.icon}"></i></div>
+      <div><h4>${q.label}</h4><p>${q.sub}</p></div>
+      <i class="fa fa-check quality-check"></i>`;
+    list.appendChild(div);
+  });
+  document.getElementById('quality-modal-overlay').classList.add('open');
+}
+function closeQualityPicker() { document.getElementById('quality-modal-overlay').classList.remove('open'); }
+
+// ─── MESSAGES ───
+function buildMsgContacts() {
+  const list = document.getElementById('msg-contacts-list');
+  if (!list) return;
+  list.innerHTML = '';
+  MSG_CONTACTS.forEach(c => {
+    const div = document.createElement('div');
+    div.className = 'msg-contact-item';
+    div.onclick = () => openChat(c.id);
+    div.innerHTML = `
+      <div class="msg-contact-avatar" style="background:${c.color}">${c.initials}</div>
+      <div class="msg-contact-info">
+        <div class="msg-contact-name">${c.name}</div>
+        <div class="msg-contact-preview">${c.preview}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <div class="msg-contact-time">${c.time}</div>
+        ${c.unread ? '<div class="msg-unread-dot"></div>' : ''}
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function openChat(contactId) {
+  currentChatContact = MSG_CONTACTS.find(c => c.id === contactId);
+  if (!currentChatContact) return;
+  currentChatContact.unread = false;
+  document.getElementById('messages-layout').style.display = 'none';
+  const chatView = document.getElementById('chat-view');
+  chatView.style.display = 'flex';
+  chatView.style.flexDirection = 'column';
+  chatView.style.height = '100vh';
+  document.getElementById('chat-contact-avatar').textContent = currentChatContact.initials;
+  document.getElementById('chat-contact-avatar').style.background = currentChatContact.color;
+  document.getElementById('chat-contact-name').textContent = currentChatContact.name;
+  document.getElementById('chat-contact-status').textContent = currentChatContact.status === 'Online' ? '● Online' : currentChatContact.status;
+  renderMessages();
+}
+
+function closeChatView() {
+  currentChatContact = null;
+  document.getElementById('chat-view').style.display = 'none';
+  document.getElementById('messages-layout').style.display = 'flex';
+  buildMsgContacts();
+}
+
+function renderMessages() {
+  const list = document.getElementById('msg-list');
+  if (!list || !currentChatContact) return;
+  list.innerHTML = '';
+  currentChatContact.messages.forEach(msg => {
+    const isMine = msg.sender === 'me';
+    const div = document.createElement('div');
+    div.className = `msg-row ${isMine ? 'mine' : ''}`;
+    div.innerHTML = `
+      <div class="msg-avatar-small" style="background:${isMine ? 'linear-gradient(135deg,var(--red),#c5003f)' : currentChatContact.color}">${isMine ? (currentUser?.name[0]||'U') : currentChatContact.initials}</div>
+      <div class="msg-bubble-wrap">
+        ${!isMine ? `<div class="msg-sender">${currentChatContact.name}</div>` : ''}
+        <div class="msg-bubble ${isMine ? 'mine' : 'theirs'}">${msg.text}</div>
+        <div class="msg-time">${msg.time}</div>
+      </div>`;
+    list.appendChild(div);
+  });
+  list.scrollTop = list.scrollHeight;
+}
+
+function sendMessage() {
+  const input = document.getElementById('msg-input-field');
+  const text = input.value.trim();
+  if (!text || !currentChatContact) return;
+  currentChatContact.messages.push({ sender:'me', text, time:'Just now' });
+  input.value = '';
+  renderMessages();
+  setTimeout(() => {
+    const replies = [
+      "That's awesome! 🎬", "Totally agree!", "Have you seen the sequel?",
+      "Movie Max has the best collection!", "Let's watch it together sometime 🍿",
+      "Great taste in movies!", "That scene was incredible!"
+    ];
+    currentChatContact.messages.push({ sender:'them', name:currentChatContact.name, text:replies[Math.floor(Math.random()*replies.length)], time:'Just now' });
+    renderMessages();
+  }, 1200);
+}
+
+// ─── COMMUNITY ───
+function buildCommunityPosts() {
+  const container = document.getElementById('community-posts');
+  if (!container) return;
+  container.innerHTML = '';
+  communityPosts.forEach(post => {
+    const movie = MOVIES[post.movie];
+    const div = document.createElement('div');
+    div.className = 'community-post';
+    div.innerHTML = `
+      <div class="post-header">
+        <div class="post-avatar" style="background:${post.color}">${post.initials}</div>
+        <div class="post-meta">
+          <h4>${post.user} ${post.badge ? `<span class="post-badge ${post.badge}">${post.badge === 'mod' ? '🛡 MOD' : '⭐ TOP'}</span>` : ''}</h4>
+          <span>${post.time}</span>
+        </div>
+      </div>
+      <p class="post-body">${post.text}</p>
+      ${movie ? `<div class="post-movie-ref" onclick="openDetail(${movie.id})">
+        <img src="${movie.poster}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/36x52/1A1A1A/FF2E63?text=${encodeURIComponent(movie.title[0])}'">
+        <div class="ref-info"><h5>${movie.title}</h5><span>${movie.year} · ${movie.genre} · ★ ${movie.rating}</span></div>
+        <i class="fa fa-chevron-right" style="margin-left:auto;color:var(--grey);font-size:12px"></i>
+      </div>` : ''}
+      <div class="post-actions">
+        <button class="post-action-btn ${post.liked?'liked':''}" id="like-${post.id}" onclick="toggleLike(${post.id})">
+          <i class="fa${post.liked?'-solid':''} fa-heart"></i> ${post.likes}
+        </button>
+        <button class="post-action-btn" onclick="showToast('Comments coming soon!','fa-comment')">
+          <i class="fa fa-comment"></i> ${post.comments}
+        </button>
+        <button class="post-action-btn" onclick="showToast('Post shared!','fa-share')">
+          <i class="fa fa-share"></i> Share
+        </button>
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function toggleLike(postId) {
+  const post = communityPosts.find(p => p.id === postId);
+  if (!post) return;
+  post.liked = !post.liked;
+  post.likes += post.liked ? 1 : -1;
+  buildCommunityPosts();
+}
+
+function submitPost() {
+  const input = document.getElementById('compose-input');
+  const text = input.value.trim();
+  if (!text) { showToast('Write something first!', 'fa-pen'); return; }
+  const newPost = {
+    id: Date.now(), user: currentUser?.name || 'You', initials: (currentUser?.name||'U').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2),
+    color: '#FF2E63', badge: null, time: 'Just now', text, movie: null,
+    likes: 0, comments: 0, liked: false
+  };
+  communityPosts.unshift(newPost);
+  input.value = '';
+  document.getElementById('compose-char').textContent = '0/280';
+  buildCommunityPosts();
+  showToast('Post shared with the community! 🎬', 'fa-paper-plane');
+}
+
+function switchCommTab(el, tab) {
+  document.querySelectorAll('.comm-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const container = document.getElementById('community-posts');
+  if (tab === 'reviews') {
+    showToast('Reviews tab loaded', 'fa-star');
+    const filtered = communityPosts.filter(p => p.movie !== null);
+    communityPosts = filtered.concat(communityPosts.filter(p => p.movie === null));
+    buildCommunityPosts();
+  } else {
+    buildCommunityPosts();
+  }
+}
+
+// ─── SETTINGS PANEL ───
+function openSettings() {
+  document.getElementById('settings-panel').classList.add('open');
+  document.getElementById('settings-overlay').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('settings-panel').classList.remove('open');
+  document.getElementById('accsettings-panel').classList.remove('open');
+  document.getElementById('settings-overlay').classList.remove('open');
+}
+function openAccSettings() {
+  document.getElementById('accsettings-panel').classList.add('open');
+  document.getElementById('settings-overlay').classList.add('open');
+  if (currentUser) {
+    const el1 = document.getElementById('acc-name-display');
+    const el2 = document.getElementById('acc-email-display');
+    if (el1) el1.textContent = currentUser.name;
+    if (el2) el2.textContent = currentUser.email;
+  }
+}
+function closeAccSettings() {
+  document.getElementById('accsettings-panel').classList.remove('open');
+  document.getElementById('settings-overlay').classList.remove('open');
+}
+
+function toggleSetting(row, key) {
+  const toggle = row.querySelector('.toggle-switch');
+  if (!toggle) return;
+  toggle.classList.toggle('on');
+  const isOn = toggle.classList.contains('on');
+  showToast(key.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) + (isOn ? ' enabled' : ' disabled'), isOn ? 'fa-check-circle' : 'fa-times-circle');
+}
+
+function cycleQuality() {
+  const qualities = qualityOptions.map(q => q.label);
+  const idx = qualities.indexOf(currentQuality);
+  currentQuality = qualities[(idx + 1) % qualities.length];
+  const el = document.getElementById('quality-val');
+  if (el) el.textContent = currentQuality;
+  showToast('Quality: ' + currentQuality, 'fa-film');
+}
+
+// ─── THEME ───
+function setTheme(mode) {
+  document.getElementById('theme-dark').classList.toggle('active', mode === 'dark');
+  document.getElementById('theme-light').classList.toggle('active', mode === 'light');
+  document.body.classList.toggle('light-mode', mode === 'light');
+  showToast((mode === 'light' ? 'Light' : 'Dark') + ' mode activated', 'fa-' + (mode === 'light' ? 'sun' : 'moon'));
+}
+
+// ─── TOAST ───
+let toastTimer;
+function showToast(msg, icon = 'fa-check-circle') {
+  const t = document.getElementById('toast');
+  t.querySelector('i').className = `fa ${icon}`;
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Stub kept for backward compat
+function buildTrendingFloat() {}
+</script>
+</body>
+</html>
